@@ -24,7 +24,6 @@ Supplementary codes and tables for BiRS
 - The R script ***M-dependence/Normal_NSBA_Decay*** contains the code for generating data for ''M-dependence with unequal covariance and decay signal'' setting, BiRS-DCF detection, BiRS-CL detection and Q-SCAN detection. 
 - The R scripts ***M-dependence/Describe*** and ***M-dependence/Describe_Decay*** contain the code for generating description information of the detection results under M-dependence covariance structure. (The RDATA file need to generate using the previous 4 detection functions and the RDATA file ***Mulist_NDi, i = 1, ..., 5*** is the same as the file ***Mulisti, i = 16, ..., 20***)
 - The R scripts ***M-dependence/Organize*** and ***M-dependence/Organize_Decay*** contain the code for generating figures of the detection results under M-dependence covariance structure
-- The directory *Figures* contains the main figures under M-dependence setting present in main paper and SI Appendix 
 
 - The R script ***Weak-dependence/Normal_ESBA*** contains the code for generating data for ''Weak-dependence with equal covariance and non-decay signal'' setting, BiRS-DCF detection, BiRS-CL detection and Q-SCAN detection.
 - The R script ***Weak-dependence/Normal_NSBA*** contains the code for generating data for ''Weak-dependence with unequal covariance and non-decay signal'' setting, BiRS-DCF detection, BiRS-CL detection and Q-SCAN detection. 
@@ -33,7 +32,6 @@ Supplementary codes and tables for BiRS
 - The R scripts ***Weak-dependence/Describe*** and ***Weak-dependence/Describe_Decay*** contain the code for generating description information of the detection results under Weak-dependence covariance structure. (The RDATA file need to generate using the previous 4 detection functions and the RDATA file ***Mulist_NDi, i = 1, ..., 5*** is the same as the file ***Mulisti, i = 16, ..., 20***)
 - The R scripts ***Weak-dependence/Organize*** and ***Weak-dependence/Organize_Decay*** contain the code for generating figures of the detection results under Weak-dependence covariance structure
 - The R script ***Speed-Test*** contains the code for calculating computational times of BiRS-DCF, DCF-SCAN and Q-SCAN
-- The directory *Figures* contains the main figures under Weak dependence setting present in main paper and SI Appendix
 
 3. Directory *Application_Code* contains the main functions for quality control and performing GWAS on UK Biobank data. Specifically, 
 - The R scripts ***CTtraits*** and ***covariate*** generate samples and covariates we needed from the main dataset of UK Biobank.
