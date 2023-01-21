@@ -1,7 +1,11 @@
 # Supplementary-Material-for-BiRS
 Supplementary codes and tables for BiRS
 
-# Code for BiRS
+## GWAS results of BiRS and Q-SCAN
+- *GWAS-BiRS*: GWAS results of BiRS
+- *GWAS-Scan*: GWAS results of Q-SCAN
+
+## Code for BiRS
 ### Overview
 
 1. Package *BiRS* contains the main functions of BiRS algorithm and DCF test. One can install the package *BiRS* through the file ***BiRS.tar.gz***. The main functions are as follows:
