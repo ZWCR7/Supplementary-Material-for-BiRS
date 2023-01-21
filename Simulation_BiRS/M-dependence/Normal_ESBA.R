@@ -90,7 +90,7 @@ for (l in 1:length(mulist))
     rm(Wi); rm(Zi)
     
     Xi = mu + Xi
-    #COV = (cov(Xi)/n + cov(Yi)/m)/(1/n + 1/m)
+    COV = (cov(Xi)/n + cov(Yi)/m)/(1/n + 1/m)
     
     ############################################################################
     
@@ -131,28 +131,26 @@ for (l in 1:length(mulist))
     ############################################################################
     
     #print('   SCQ: start')
-    # aaSCQ = Sys.time()
-    # reSCQ = SigScanQ(Xi, Yi, COV, Lmax, Lmin, foldlen, skip, MB, alpha, f = 0)
-    # bbSCQ = Sys.time()
-    # 
-    # diffSCQ = bbSCQ - aaSCQ
-    #print('   SCQ: end')
+    aaSCQ = Sys.time()
+    reSCQ = SigScanQ(Xi, Yi, COV, Lmax, Lmin, foldlen, skip, MB, alpha, f = 0)
+    bbSCQ = Sys.time()
+    
+    diffSCQ = bbSCQ - aaSCQ
+    print('   SCQ: end')
     ############################################################################
     
     #print('   SCM: start')
-    # aaSCM = Sys.time()
-    # reSCM = SigScanM(Xi, Yi, Lmax, Lmin, foldlen, skip, MB, alpha, f = 0)
-    # bbSCM = Sys.time()
-    # 
-    # diffSCM = bbSCM - aaSCM
+    aaSCM = Sys.time()
+    reSCM = SigScanM(Xi, Yi, Lmax, Lmin, foldlen, skip, MB, alpha, f = 0)
+    bbSCM = Sys.time()
+     
+    diffSCM = bbSCM - aaSCM
     #print('   SCM: end')
     # return(list(reBSD = reBSD, reBSC = reBSC, reSCD = reSCD, reSCC = reSCC, reSCQ = reSCQ, reSCM = reSCM, 
     #             diffBSD = diffBSD, diffBSC = diffBSC, diffSCD = diffSCD, diffSCC = diffSCC, diffSCQ = diffSCQ, 
     #             diffSCM = diffSCM))
     
-    #return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reSCM = reSCM, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffSCM = diffSCM))
-    
-    return(list(reBSD = reBSD, reBSC = reBSC, diffBSD = diffBSD, diffBSC = diffBSC))
+    return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reSCM = reSCM, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffSCM = diffSCM))
   }
   
   cl = makeCluster(100)
