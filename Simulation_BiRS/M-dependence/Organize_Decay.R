@@ -17,14 +17,14 @@ mainT = 'TPR, Unequal Covariance'
 nameF = 'Figures/Normal_ESBA_FDR_Decay.jpg'
 mainF = 'FDR, Unequal Covariance'
 
-jpeg(filename = nameT, width = 1200, height = 900, quality = 120)
+jpeg(filename = nameT, width = 1200, height = 900)
 plot(delta, TRBSD_ND, type = 'b', pch = 1, lty = 1, lwd = 2, col = 1, main = mainT, 
      ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
 lines(delta, TRBSD_D, type = "b", pch = 2, lty = 2, col = 1, lwd = 4)
 legend("topleft", c("Non-Decay", "Decay"), pch = c(1, 2), lty = c(1, 2), box.col = "grey", cex = 4, col = 1, lwd = 4)
 dev.off()
 
-jpeg(filename = nameF, width = 1200, height = 900, quality = 120)
+jpeg(filename = nameF, width = 1200, height = 900)
 plot(delta, FRBSD_ND, type = 'b', pch = 1, lty = 1, lwd = 4, col = 1, main = mainF, 
      ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 0.3), cex.main = 4)
 lines(delta, FRBSD_D, type = "b", pch = 2, lty = 2, col = 1, lwd = 2)
@@ -51,14 +51,14 @@ mainT = 'TPR, Unequal Covariance'
 nameF = 'Figures/Normal_NSBA_FDR_Decay.jpg'
 mainF = 'FDR, Unequal Covariance'
 
-jpeg(filename = nameT, width = 1200, height = 900, quality = 120)
+jpeg(filename = nameT, width = 1200, height = 900)
 plot(delta, TRBSD_ND, type = 'b', pch = 1, lty = 1, lwd = 2, col = 1, main = mainT, 
      ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
 lines(delta, TRBSD_D, type = "b", pch = 2, lty = 2, col = 1, lwd = 4)
 legend("topleft", c("Non-Decay", "Decay"), pch = c(1, 2), lty = c(1, 2), box.col = "grey", cex = 4, col = 1, lwd = 4)
 dev.off()
 
-jpeg(filename = nameF, width = 1200, height = 900, quality = 120)
+jpeg(filename = nameF, width = 1200, height = 900)
 plot(delta, FRBSD_ND, type = 'b', pch = 1, lty = 1, lwd = 4, col = 1, main = mainF, 
      ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 0.3), cex.main = 4)
 lines(delta, FRBSD_D, type = "b", pch = 2, lty = 2, col = 1, lwd = 2)
