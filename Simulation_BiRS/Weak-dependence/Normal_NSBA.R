@@ -1,6 +1,11 @@
 library(foreach)
 library(doParallel)
 library(BiRS)
+library(QSCAN)
+library(SPAtest)
+library(KnockoffScreen)
+library(Matrix)
+library(mvnfast)
 
 p = 8192
 SigmaY = matrix(0, p, p)
@@ -8,7 +13,7 @@ for (j in 1:p)
 {
   for (k in 1:p)
   {
-    SigmaY[j, k] = (1 + abs(j - k))^(-1/4)
+    SigmaY[j, k] = 0.9^abs(j - k)
   }
 }
 
@@ -16,7 +21,7 @@ SigmaX = 2*SigmaY
 
 dense = 4
 deltar = 0.01
-deltav = c(0.15, 0.20, 0.25, 0.30, 0.35)
+deltav = c(0.20, 0.25, 0.30, 0.35, 0.40)
 
 mulist = list()
 
@@ -66,9 +71,10 @@ for (setbeta in 1:dense)
 
 for (l in 1:length(mulist))
 {
+  source('~/Simulation_BiRS/KSDet.R')
   print(paste0(' mulist', l, ' :start'))
   
-  p = 8192; n = 600; m = 400; nsimu = 1000
+  p = 8192; n = 600; m = 400; nsimu = 500
   MB = 1000; alpha = 0.05; trunc = 5; foldlen = 4096
   Lmin = 128; Lmax = 320; skip = 32
   
@@ -81,8 +87,13 @@ for (l in 1:length(mulist))
     
     Xi = rmvn(n, mu, SigmaX)
     Yi = rmvn(m, rep(0, p), SigmaY)
-    COV = (cov(Xi)/n + cov(Yi)/m)/(1/n + 1/m)
+    genotype = rbind(Xi, Yi); phenotype = c(rep(1, n), rep(0, m)); covariate = matrix(1, n + m, 1)
+    genotype = as(genotype, "sparseMatrix")
     
+    names = rep(0, p)
+    for (j in 1:p) names[j] = paste0(j)
+    
+    colnames(genotype) = names
     ############################################################################
     
     #print('   BSD: start')
@@ -103,57 +114,41 @@ for (l in 1:length(mulist))
     #print('   BSC: end')
     ############################################################################
     
-    #print('   SCD: start')
-    aaSCD = Sys.time()
-    reSCD = SigScanDCF(Xi, Yi, foldlen, Lmin, Lmax, skip, MB, alpha, Deal = 'Overlap', COMPU = 'None')
-    bbSCD = Sys.time()
-    
-    diffSCD = bbSCD - aaSCD
-    #print('   SCD: end')
-    ############################################################################
-    
-    #print('   SCC: start')
-    aaSCC = Sys.time()
-    reSCC = SigScanCL(Xi, Yi, foldlen, Lmin, Lmax, skip, alpha, Deal = 'Overlap', COMPU = F)
-    bbSCC = Sys.time()
-    
-    diffSCC = bbSCC - aaSCC
-    #print('   SCC: end')
-    ############################################################################
-    
     #print('   SCQ: start')
     aaSCQ = Sys.time()
-    reSCQ = SigScanQ(Xi, Yi, COV, Lmax, Lmin, foldlen, skip, MB, alpha, f = 0)
+    reSCQ = Q_SCAN(genotype, phenotype, covariate, family = 'binomial', Lmax, Lmin)
     bbSCQ = Sys.time()
     
     diffSCQ = bbSCQ - aaSCQ
-    
     #print('   SCQ: end')
     ############################################################################
     
-    #print('   SCM: start')
-    aaSCM = Sys.time()
-    reSCM = SigScanM(Xi, Yi, Lmax, Lmin, foldlen, skip, MB, alpha, f = 0)
-    bbSCM = Sys.time()
+    #print('   SCQ: start')
+    aaKSD = Sys.time()
+    result.prelim = KS.prelim(phenotype, out_type = "D")
+    region.pos = c(seq(1, p, by = skip), (p+1))
+    reKSD = KSDet(result.prelim, genotype, M = 5, region.pos)
+    bbKSD = Sys.time()
     
-    diffSCM = bbSCM - aaSCM
-    #print('   SCM: end')
-    return(list(reBSD = reBSD, reBSC = reBSC, reSCD = reSCD, reSCC = reSCC, reSCQ = reSCQ, reSCM = reSCM, 
-                diffBSD = diffBSD, diffBSC = diffBSC, diffSCD = diffSCD, diffSCC = diffSCC, diffSCQ = diffSCQ, 
-                diffSCM = diffSCM))
+    diffKSD = bbKSD - aaKSD
+    #print('   SCQ: end')
+    ############################################################################
+    
+    
+    return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reKSD = reKSD, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffKSD = diffKSD))
   }
   
-  cl = makeCluster(50)
+  cl = makeCluster(100)
   registerDoParallel(cl)
   
   aa = Sys.time()
-  res = foreach(i = 1:nsimu, .packages = c("mvnfast", "BiRS")) %dopar% SimuL(i)
+  res = foreach(i = 1:nsimu, .packages = c("mvnfast", "BiRS", "QSCAN", "KnockoffScreen", "SPAtest", "Matrix")) %dopar% SimuL(i)
   bb = Sys.time()
   
   stopImplicitCluster()
   stopCluster(cl)
   
-  save(list = c('res'), file = paste0('Normal_NSBA/Mulist', l, '.RData'))
+  save(list = c('res', 'mu'), file = paste0('Normal_NSBA/Mulist', l, '.RData'))
   
   print(paste0(' mulist', l, ' :end; Time = ', bb - aa))
   

@@ -8,11 +8,11 @@ for (j in 1:p)
 {
   for (k in 1:p)
   {
-    SigmaY[j, k] = (1 + abs(j - k))^(-1/4)
+    SigmaY[j, k] = 0.9^abs(j - k)
   }
 }
 
-SigmaX = SigmaY
+#SigmaX = SigmaY
 
 dense = 4
 deltar = 0.01
@@ -21,7 +21,7 @@ deltav = c(0.20, 0.25, 0.30, 0.35, 0.40)
 mulist = list()
 
 set.seed(4)
-lensam = sample(seq(128, 288, by = 32), size = 4, replace = F)
+lensam = sample(seq(128, 320, by = 32), size = 4, replace = F)
 sum_len = c(0, lensam[1], lensam[1] + lensam[2], lensam[1] + lensam[2] + lensam[3])
 
 set.seed(7)
@@ -44,7 +44,7 @@ ind1 = NULL; ind2list = list()
 for (j in 1:dense)
 {
   pos1 = startp[j]; pos2 = endp[j]
-  indsel = sample(pos1:pos2, size = floor((pos2 - pos1 + 1)/3), replace = F)
+  indsel = sample(pos1:pos2, size = floor((pos2 - pos1 + 1)/4), replace = F)
   ind2list = c(ind2list, list(indsel))
 }
 
@@ -60,7 +60,7 @@ for (setdelta in 1:length(deltav))
     ind1 = pos1:pos2
     ind2 = ind2list[[j]]
     
-    decay_rate = 100*((log(p*n)/n)^(1/2) - (log((p - sum_len[j])*n)/n)^(1/2))
+    decay_rate = 50*((log(p*n)/n)^(1/2) - (log((p - sum_len[j])*n)/n)^(1/2))
     
     theta1 = runif(length(ind1), -deltar, deltar)
     theta2 = runif(length(ind2), -delta + decay_rate, delta - decay_rate)
@@ -76,7 +76,7 @@ for (l in 1:length(mulist))
 {
   print(paste0(' mulist', l, ' :start'))
   
-  p = 8192; n = 600; m = 400; nsimu = 1000
+  p = 8192; n = 600; m = 400; nsimu = 500
   MB = 1000; alpha = 0.05; trunc = 5; foldlen = 4096
   
   mu = mulist[[l]]
@@ -85,7 +85,7 @@ for (l in 1:length(mulist))
   {
     set.seed(i)
     
-    Xi = rmvn(n, mu, SigmaX)
+    Xi = rmvn(n, mu, SigmaY)
     Yi = rmvn(m, rep(0, p), SigmaY)
     
     ############################################################################
@@ -99,7 +99,7 @@ for (l in 1:length(mulist))
     return(list(reBSD = reBSD, diffBSD = diffBSD))
   }
   
-  cl = makeCluster(50)
+  cl = makeCluster(100)
   registerDoParallel(cl)
   
   aa = Sys.time()
@@ -113,6 +113,6 @@ for (l in 1:length(mulist))
   
   print(paste0(' mulist', l, ' :end; Time = ', bb - aa))
   
-  rm(list = ls()[-c(which(ls() == "mulist"), which(ls() == "l"), which(ls() == "SigmaX"), which(ls() == "SigmaY"))])
+  rm(list = ls()[-c(which(ls() == "mulist"), which(ls() == "l"), which(ls() == "SigmaY"))])
   
 }
