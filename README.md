@@ -49,6 +49,9 @@ Supplementary codes and tables for BiRS
 - The R scripts ***BiRS/BiRSGenome***, ***QSCAN/QScanGenome*** and ***KnockoffScreen/KSGWAS*** perform GWAS on C50 Malignant neoplasms of breast using UK Biobank data by BiRS-DCF, QSCAN and KnockoffScreen.
 - The R script ***sh_file_generator*** generates .sh file for performing GWAS on C50 Malignant neoplasms of breast using UK Biobank data using regenie.
 - The .sh files ***fit.sh*** and ***test.sh*** perform GWAS on C50 Malignant neoplasms of breast using UK Biobank data using regenie.
+- The .csv files *C50Breast_BiRS.csv*, *C50Breast_Scan*, *C50Breast_KSGWAS* and *C50Breast_Regenie* are GWAS results of the four methods, which are organized for plotting signal regions. 
+- The .csv files *C50Breast_chr11_gene.csv*, *C50Breast_chr12_gene.csv* and *C50Breast_chr19_gene.csv* are genomic locations of certain genes in chromosomes 11, 12 and 19, respectively.
+- The R script ***plot_gene*** plots identified signal regions of the four methods.
 
 
 ### Workflows
@@ -96,3 +99,7 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 4. Run ***Application_Code/KnockoffScreen/KSGWAS.R*** to perform region-wise GWAS on the genomic data using KnockoffScreen and generate the GWAS results contained in *GWAS-KS.csv*.
 5. Run ***Application_Code/QSCAN/QScanGenome.R*** to perform region-wise GWAS on the genomic data using Q-SCAN and generate the GWAS results contained in *GWAS-Scan.csv*.
 6. Run ***Application_Code/BiRS/BiRSGenome.R*** to perform region-wise GWAS on the genomic data using BiRS-DCF and generate the GWAS results contained in *GWAS-BiRS.csv*.
+
+#### Data application: visualize the detected signal regions of different methods
+1. Please make sure that the .csv files *C50Breast_BiRS.csv*, *C50Breast_Scan*, *C50Breast_KSGWAS*, *C50Breast_Regenie*, *C50Breast_chr11_gene.csv*, *C50Breast_chr12_gene.csv*, *C50Breast_chr19_gene.csv* and Rscript ***plot_gene*** in the same directory.
+2. Run ***plot_gene*** to visualize the detected signal regions and related genes.
