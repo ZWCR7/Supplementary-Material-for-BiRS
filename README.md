@@ -1,6 +1,11 @@
 # Supplementary-Material-for-BiRS
 Supplementary codes and tables for BiRS
 
+## Data and software availability
+- Previous data published in UK Biobank were used for this work and this research has been conducted using UK Biobank Resource under project 79237. One can refer to 
+https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data download or detailed description of UKB data.
+- PLINK2.0 was used to pre-treatment UKB data, see https://www.cog-genomics.org/plink/2.0/ for detailed manuls of using PLINK2.0.
+
 ## GWAS results of BiRS and Q-SCAN
 - *GWAS-BiRS.csv*: GWAS results of BiRS
 - *GWAS-Scan.csv*: GWAS results of Q-SCAN
