@@ -1,28 +1,34 @@
 library(foreach)
 library(doParallel)
 library(BiRS)
+library(pracma)
+library(Matrix)
+library(simstudy)
 
-p = 8192
-SigmaY = matrix(0, p, p)
-for (j in 1:p)
+LDlist = list()
+p = 0
+for (i in 1:100)
 {
-  for (k in 1:p)
-  {
-    if (abs(j - k) <= 64)
-    {
-      SigmaY[j, k] = 0.9^abs(j - k)
-    }
-  }
+  LD = as.matrix(read.table(paste0('cor100loci/cor_loci', i, '.txt')))
+
+  p = p + ncol(LD)
+  LD = nearPD(LD, corr = T, maxit = 100)$mat
+
+  LD = as.matrix(LD)
+  colnames(LD) = rownames(LD)
+  
+  LDlist = c(LDlist, list(LD))
 }
 
 dense = 4
-deltar = 0.01
-deltav = c(0.25)
+deltar = 0.0001
+deltav = c(0.3, 0.4, 0.5, 0.6, 0.7)
 
 mulist = list()
 
 set.seed(4)
-lensam = sample(seq(128, 320, by = 32), size = 4, replace = F)
+lensam = sample(seq(64, 192, by = 16), size = 4, replace = F)
+MAFX = 0.05 + rbeta(p, 2, 10)
 
 set.seed(7)
 intersam = sample(seq(1, 2*dense, by = 2), size = dense, replace = F)
@@ -49,14 +55,17 @@ for (setbeta in 1:dense)
     ind2 = c(ind2, sample(pos1:pos2, size = floor((pos2 - pos1 + 1)/16), replace = F))
   }
   
-  set.seed(1995)
+  set.seed(1024)
   for (setdelta in 1:length(deltav))
   {
     delta = deltav[setdelta]
     
     mu = rep(0, p)
-    theta1 = runif(length(ind1), -deltar, deltar)
-    theta2 = sample(c(-1, 1), size = length(ind2), replace = T)*runif(length(ind2), delta - 0.05, delta)
+    theta1 = runif(length(ind1), -deltar, deltar)*MAFX[ind1]
+    theta2 = sample(c(-1, 1), size = length(ind2), replace = T)*runif(length(ind2), delta - 0.1, delta)*MAFX[ind2]
+    
+    #theta1 = runif(length(ind1), -deltar, deltar)
+    #theta2 = sample(c(-1, 1), size = length(ind2), replace = T)*runif(length(ind2), delta/2, delta)
     
     mu[ind1] = theta1
     mu[ind2] = theta2
@@ -65,31 +74,46 @@ for (setbeta in 1:dense)
   }
 }
 
-for (l in 1:length(mulist))
+for (l in 1:20)
+{
+  print(max(MAFX + mulist[[l]]))
+  print(min(MAFX + mulist[[l]]))
+}
+
+for (l in 13:length(mulist))
 {
   source('KSDetGenetic.R')
   print(paste0(' mulist', l, ' :start'))
   
-  p = 8192; n = 600; m = 400; nsimu = 500
-  MB = 1000; alpha = 0.05; trunc = 5; foldlen = 4096
-  Lmin = 128; Lmax = 320
+  p = 10000; n = 600; m = 400; nsimu = 100
+  MB = 1000; alpha = 0.05; trunc = 5; foldlen = 5000
+  Lmin = 64; Lmax = 192
   
   mu = mulist[[l]]
+  MAFY = MAFX + mu
   
   SimuL = function(i)
   {
     set.seed(i)
     
-    Xi = rmvn(n, mu, SigmaY)
-    Yi = rmvn(m, rep(0, p), SigmaY)
+    Xi = matrix(0, n, p); Yi = matrix(0, m, p)
     
-    Xi[Xi <= 1.5] = 0
-    Xi[(Xi > 1.5 & Xi <= 3)] = 1
-    Xi[Xi > 3] = 2
-    
-    Yi[Yi <= 1.5] = 0
-    Yi[(Yi > 1.5 & Yi <= 3)] = 1
-    Yi[Yi > 3] = 2
+    for (block in 1:100)
+    {
+      st = 100*(block - 1) + 1; et = 100*block
+      LDb = LDlist[[block]]
+      
+      XLb = as.matrix(genCorGen(n = n, nvars = 100, params1 = MAFX[st:et], dist = 'binary', corMatrix = LDb, wide = T))[, -1]
+      XRb = as.matrix(genCorGen(n = n, nvars = 100, params1 = MAFX[st:et], dist = 'binary', corMatrix = LDb, wide = T))[, -1]
+      
+      YLb = as.matrix(genCorGen(n = m, nvars = 100, params1 = MAFY[st:et], dist = 'binary', corMatrix = LDb, wide = T))[, -1]
+      YRb = as.matrix(genCorGen(n = m, nvars = 100, params1 = MAFY[st:et], dist = 'binary', corMatrix = LDb, wide = T))[, -1]
+      
+      Xi[, (st:et)] = XLb + XRb
+      Yi[, (st:et)] = YLb + YRb
+      
+      print(block)
+    }
     
     genotype = rbind(Xi, Yi); phenotype = c(rep(1, n), rep(0, m)); covariate = matrix(1, n + m, 1)
     genotype = as(genotype, "sparseMatrix"); colnames(genotype) = 1:p
@@ -125,7 +149,7 @@ for (l in 1:length(mulist))
     
     #print('   SCQ: start')
     aaKSD = Sys.time()
-    indgap = seq(1, p, by = 16)
+    indgap = seq(1, p, by = 32)
 
     poschr = 1:p
     window.bed = c()
@@ -138,7 +162,7 @@ for (l in 1:length(mulist))
     window.bed<-window.bed[order(as.numeric(window.bed[,2])),]
 
     result.prelim = KS.prelim(phenotype, out_type = "D")
-    region.pos = c(seq(1, p, by = 64), (p+1))
+    region.pos = c(seq(1, p, by = 128), (p+1))
     reKSD = KSDetG(result.prelim, genotype, window.bed, region.pos, M = 5, thres.single = 0.05, thres.ultrarare = 5, thres.missing = 0.1,
                    impute.method = 'fixed', bigmemory = T, leveraging = T, LD.filter = 0.75)
     bbKSD = Sys.time()
@@ -147,25 +171,27 @@ for (l in 1:length(mulist))
     #print('   SCQ: end')
     ############################################################################
     
+    #reKSD = NULL; diffKSD = NULL
     
+    #return(list(reBSD = reBSD))
     return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reKSD = reKSD, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffKSD = diffKSD))
   }
   
-  cl = makeCluster(100)
+  cl = makeCluster(50)
   registerDoParallel(cl)
   
   aa = Sys.time()
-  res = foreach(i = 1:nsimu, .packages = c("mvnfast", "BiRS", "QSCAN", "KnockoffScreen", "SPAtest", "Matrix", "CompQuadForm", "irlba")) %dopar% SimuL(i)
+  res = foreach(i = 1:nsimu, .packages = c("mvnfast", "BiRS", "QSCAN", "KnockoffScreen", "SPAtest", "Matrix", "CompQuadForm", "irlba", "simstudy")) %dopar% SimuL(i)
   bb = Sys.time()
   
   stopImplicitCluster()
   stopCluster(cl)
   
-  save(list = c('res', 'mu'), file = paste0('Genetic_Setting/Mulists', 5*(l - 1) + 1, '.RData'))
+  save(list = c('res', 'mu'), file = paste0('Mulist', l, '.RData'))
   
   print(paste0(' mulist', l, ' :end; Time = ', bb - aa))
   
-  rm(list = ls()[-c(which(ls() == "mulist"), which(ls() == "l"), which(ls() == "SigmaY"))])
+  rm(list = ls()[-c(which(ls() == "mulist"), which(ls() == "l"), which(ls() == "LDlist"), which(ls() == "MAFX"))])
   
 }
 
