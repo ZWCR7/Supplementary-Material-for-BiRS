@@ -72,9 +72,14 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 3. Create folder *Simulation_BiRS/Weak-dependence/Figures/* for saving the figures of the detection results under Weak-dependence covariance structure then run ***Simulation_BiRS/Weak-dependence/Organize.R*** to generate them.
 
 #### Simulation for comparing detection performance of different methods under genetic settings
-1. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
-2. Run ***Simulation_BiRS/Genetic_Setting/Describe_Genetic.R*** for generating description information of the detection results under genetic setting.
-3. Create folder *Simulation_BiRS/Genetic_Setting/Figures/* for saving the figures of the detection results under genetic setting then run ***Simulation_BiRS/Genetic_Setting/Organize_Genetic.R*** to generate them.
+1. Run plink2 in command line to get the 100 loci from UK Biobank imputed data, example code:
+```Bash
+plink --bfile /sc/arion/scratch/ioniti03/download/ukb/genotype/ukb_imp_merged_v5  --keep /sc/arion/work/ioniti03/projects/fan/QR_ukbb/brifile.100000.txt --extract /sc/arion/work/ioniti03/projects/fan/QR_ukbb/10000variant.id_british.txt --make-bed --out /sc/arion/projects/ASChub/projects/columbia/fan2/ukb_british_100000sample_10000SNP
+```
+2. Run ***Simulation_BiRS/Genetic_Setting/get_correlation_100loci.R*** to get the Pearson correlation matrix for simulation.  
+3. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
+4. Run ***Simulation_BiRS/Genetic_Setting/Describe_Genetic.R*** for generating description information of the detection results under genetic setting.
+5. Create folder *Simulation_BiRS/Genetic_Setting/Figures/* for saving the figures of the detection results under genetic setting then run ***Simulation_BiRS/Genetic_Setting/Organize_Genetic.R*** to generate them.
 
 #### Simulation for comparing the empirical FWERs of different methods for different settings.
 1. Run ***Simulation_BiRS/Size-Test/Size-Test.R*** to generate the empirical FWERs of different methods for different settings (saving as .RData file).
