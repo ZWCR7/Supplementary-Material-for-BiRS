@@ -74,7 +74,7 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 #### Simulation for comparing detection performance of different methods under genetic settings
 1. Run plink2 in command line to get the 100 loci from UK Biobank imputed data, example code:
 ```Bash
-plink --bfile /zhw/ukb/genotype/ukb_imp_merged_v5  --keep /zhw/projects/BiRS/brifile.100000.txt --extract  /zhw/projects/QR_ukbb/10000variant.id_british.txt --make-bed --out  /zhw/projects/BiRS/ukb_british_100000sample_10000SNP
+plink --bfile /zhw/ukb/genotype/ukb_imp_merged_v5 --keep /zhw/projects/BiRS/brifile.100000.txt --extract /zhw/projects/BiRS/10000variant.id_british.txt --make-bed --out /zhw/projects/BiRS/ukb_british_100000sample_10000SNP
 ```
 2. Run ***Simulation_BiRS/Genetic_Setting/get_correlation_100loci.R*** to get the Pearson correlation matrix for simulation.  
 3. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
