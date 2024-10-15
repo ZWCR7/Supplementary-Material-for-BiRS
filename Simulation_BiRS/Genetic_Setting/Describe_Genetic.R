@@ -1,262 +1,411 @@
-powerBSD = rep(500, 20)
-TrateBSD = matrix(0, 500, 20)
-FrateBSD = matrix(0, 500, 20)
-DifTiBSD = matrix(0, 500, 20)
+p = 0
+for (block in 1:40)
+{
+  load(paste0('MAFS/block', block, '_maf.RData'))
+  pb = length(MAF)
+  
+  p = p + pb
+}
 
-for (i in 1:20)
-{ 
-  load(paste0('Mulist', i, '.RData'))
+Anno = matrix(rnorm(10*p), 10, p)
+rank = colRanks(t(Anno), preserveShape = TRUE)
+PHRED = -10*log10(1-rank/dim(rank)[1])
+
+set.seed(2)
+dense = 4
+locuind = sort(sample(1:40, size = dense, replace = F))
+
+causal_locu = rep(0, 40); causal_locu[locuind] = 1
+gamma1 = log(0.01); gamma2 = log(4)
+
+MAFYMat = matrix(0, 7, p)
+deltav = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7)
+
+startH = rep(0, 9)
+
+Hnum = 0
+for (hh in 1:9)
+{
+  st.hh = (hh - 1)*4 + 1
+  et.hh = hh*4
   
-  nsimu = length(res); p = 8192
-  EstR = matrix(0, nsimu, p)
-  
-  for (j in 1:length(res))
+  for (block in st.hh:et.hh)
   {
-    if (!is.character(res[[j]]$reBSD))
+    load(paste0('MAFS/block', block, '_maf.RData'))
+    Hnum = Hnum + length(MAF)
+  }
+  
+  startH[hh] = Hnum
+}
+
+startH = c(0, startH)
+
+true_mat = matrix(0, 7, p)
+for (j in 1:7)
+{
+  delta = deltav[j]
+  
+  true_causal = rep(0, p)
+  MAFX = c(); MAFY = c(); startb = 0
+  
+  set.seed(1)
+  for (block in 1:40)
+  {
+    load(paste0('MAFS/block', block, '_maf.RData'))
+    pb = length(MAF)
+    
+    MAFC = MAF + 0.01
+    
+    MAFX = c(MAFX, MAFC)
+    
+    if (causal_locu[block] == 0)
     {
-      Resj = res[[j]]$reBSD$BSDCF_res
+      MAFY = c(MAFY, MAFC)
+    }
+    else
+    {
+      length.window = floor(sample(c(1, 1.5, 2), 1)/50*pb)
       
-      DifTiBSD[j, i] = as.numeric(res[[j]]$diffBSD, units = 'secs')
+      print(length.window)
+      window.st = sample(1:(pb - length.window - 2), 1)
+      window.et = window.st + length.window - 1
       
-      for (k in 1:nrow(Resj))
+      true_causal[(startb + window.st):(startb + window.et)] = 1
+      
+      anno_sel = sample(1:10, 5, replace = F)
+      anno_block =  Anno[anno_sel, (startb + window.st):(startb + window.et)]
+      
+      causal_prob = exp(gamma1 + gamma2*apply(anno_block, 2, sum))/(1 + exp(gamma1 + gamma2*apply(anno_block, 2, sum)))
+      
+      causal_index = rep(0, pb)
+      sign = rep(0, pb)
+      
+      causal_index[window.st:window.et] = rbinom(length.window, 1, causal_prob)
+      sign[window.st:window.et] = sample(c(-1, 1), length.window, replace = T)
+      
+      MAFY = c(MAFY, MAFC + delta*sign*causal_index*MAFC)
+    }
+    
+    startb = startb + pb
+  }
+  
+  MAFYMat[j, ] = MAFY
+  true_mat[j, ] = true_causal
+}
+
+alpha = 0.05
+
+for (i in 1:7)
+{
+  MAFY = MAFYMat[i, ]
+  delta = deltav[i]
+  
+  BiRSDCF_Det = list()
+  BiRSCL_Det = list()
+  QSCAN_Det = list()
+  STAARO_Det = list()
+  STAARS_Det = list()
+  STAARB_Det = list()
+  KnockoffScreen_Det = list()
+  SSSS_Det = list()
+  
+  for (seed in 1:25)
+  {
+    BSDCFcandidate = NULL
+    block_index = NULL
+    quantileMax = rep(-9999, 1000); quantileMin = rep(-9999, 1000)
+    
+    startind = c(); endind = c()
+    for (hh in 1:10)
+    {
+      load(paste0('Genetic_RES/BiRS-DCF_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
+      
+      quantileMax = pmax(quantileMax, reBSD$quantileMax)
+      quantileMin = pmax(quantileMin, reBSD$quantileMin)
+      
+      if (!is.null(reBSD$BSDCF))
       {
-        EstR[j, (Resj$startind[k]:Resj$endind[k])] = 1
+        BSDCFb = reBSD$BSDCF
+        BSDCFb[, 1] = BSDCFb[, 1] + startH[hh]
+        BSDCFb[, 2] = BSDCFb[, 2] + startH[hh]
+        
+        BSDCFb = cbind(BSDCFb, rep(hh, nrow(BSDCFb)))
+        
+        BSDCFcandidate = rbind(BSDCFcandidate, BSDCFb)
+        block_index = c(block_index, hh) 
       }
     }
-    else
-    {
-      powerBSD[i] = powerBSD[i] - 1
-    }
-  }
-  
-  true.ind = rep(0, p)
-  true.ind[which(mu != 0)] = 1
-  true.ind[which(mu == 0)] = -2
-  
-  for (l in 1:nsimu)
-  {
-    if (length(which(EstR[l, ] != 0)) != 0)
-    {
-      Diffl = EstR[l, ] - true.ind
-      
-      TrateBSD[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
-      FrateBSD[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
-    }
-  }
-}
-
-save(list = c('FrateBSD', 'TrateBSD', 'powerBSD', 'DifTiBSD'), file = 'BSD_Describe.RData')
-
-#####################################################################################################
-
-rm(list = ls())
-
-powerBSC = rep(500, 20)
-TrateBSC = matrix(0, 500, 20)
-FrateBSC = matrix(0, 500, 20)
-DifTiBSC = matrix(0, 500, 20)
-
-for (i in 1:20)
-{
-  load(paste0('Mulist', i, '.RData'))
-  
-  nsimu = length(res); p = 8192
-  EstR = matrix(0, nsimu, p)
-  
-  for (j in 1:length(res))
-  {
     
-    if (!is.character(res[[j]]$reBSC))
+    thresMax = quantile(quantileMax, 1 - alpha)
+    thresMin = quantile(quantileMin, 1 - alpha)
+    
+    Tn = -10000
+    
+    if (!is.null(BSDCFcandidate))
     {
-      Resj = res[[j]]$reBSC$BSCL_res
+      Tn = max(BSDCFcandidate[, 3])
+    }
+    
+    BSDCF_res = NULL
+    for (j in 1:length(block_index))
+    {
+      indexj = which(BSDCFcandidate[, 4] == block_index[j])
+      Tnj = max(BSDCFcandidate[indexj, 3])
       
-      DifTiBSC[j, i] = as.numeric(res[[j]]$diffBSC, units = 'secs')
+      #BSDCF_res = rbind(BSDCF_res, BSDCFcandidate[indexj, ])
       
-      for (k in 1:nrow(Resj))
+      if (Tnj > thresMax)
       {
-        EstR[j, (Resj$startind[k]:Resj$endind[k])] = 1
+        BSDCF_res = rbind(BSDCF_res, BSDCFcandidate[indexj, ])
       }
     }
-    else
-    {
-      powerBSC[i] = powerBSC[i] - 1
-    }
-  }
-  
-  true.ind = rep(0, p)
-  true.ind[which(mu != 0)] = 1
-  true.ind[which(mu == 0)] = -2
-  
-  for (l in 1:nsimu)
-  {
-    if (length(which(EstR[l, ] != 0)) != 0)
-    {
-      Diffl = EstR[l, ] - true.ind
-      
-      TrateBSC[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
-      FrateBSC[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
-    }
-  }
-  
-}
-
-save(list = c('FrateBSC', 'TrateBSC', 'powerBSC', 'DifTiBSC'), file = 'BSC_Describe.RData')
-#######################################################################################################
-
-rm(list = ls())
-
-powerSCQ = rep(500, 20)
-TrateSCQ = matrix(0, 500, 20)
-FrateSCQ = matrix(0, 500, 20)
-DifTiSCQ = matrix(0, 500, 20)
-
-for (i in 1:20)
-{
-  load(paste0('Mulist', i, '.RData'))
-  
-  nsimu = length(res); p = 8192
-  EstR = matrix(0, nsimu, p)
-  
-  for (j in 1:length(res))
-  {
-    Resj = as.matrix(res[[j]]$reSCQ$SCAN_res)
     
-    if (ncol(Resj) == 1) Resj = t(Resj)
-    
-    if (sum(Resj) == 1)
+    if (!is.null(BSDCF_res))
     {
-      powerSCQ[i] = powerSCQ[i] - 1
+      index_thres = which(BSDCF_res[, 3] > thresMin)
+      BSDCF_res = BSDCF_res[index_thres, ]
+
+      startind = BSDCF_res$startind; endind = BSDCF_res$endind
     }
-    else
+    
+    BiRSDCF_Det = c(BiRSDCF_Det, list(data.frame(startind, endind)))
+    
+    ##############################################################################################################
+    startind = c(); endind = c()
+    
+    for (hh in 1:10)
     {
-      DifTiSCQ[j, i] = as.numeric(res[[j]]$diffSCQ, units = 'secs')
+      load(paste0('Genetic_RES/BiRS-CL_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
       
-      for (k in 1:nrow(Resj))
+      if (!is.character(reBSC))
       {
-        EstR[j, (Resj[k, 2]:Resj[k, 3])] = 1
+        startind = c(startind, reBSC$BSCL_res$startind + startH[hh])
+        endind = c(endind, reBSC$BSCL_res$endind + startH[hh])
       }
     }
-  }
-  
-  true.ind = rep(0, p)
-  true.ind[which(mu != 0)] = 1
-  true.ind[which(mu == 0)] = -2
-  
-  for (l in 1:nsimu)
-  {
-    if (length(which(EstR[l, ] != 0)) != 0)
+    
+    BiRSCL_Det = c(BiRSCL_Det, list(data.frame(startind, endind)))
+    ##############################################################################################################
+    startind = c(); endind = c(); R.single  = c(); R.window = c()
+    for (hh in 1:10)
     {
-      Diffl = EstR[l, ] - true.ind
+      load(paste0('Genetic_RES/KnockoffScreen_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
       
-      TrateSCQ[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
-      FrateSCQ[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
-    }
-  }
-  
-}
-
-save(list = c('FrateSCQ', 'TrateSCQ', 'powerSCQ', 'DifTiSCQ'), file = 'SCQ_Describe.RData')
-
-######################################################################################################################################
-
-rm(list = ls())
-
-MK.q.byStat<-function (kappa,tau,M,Rej.Bound=10000){
-  b<-order(tau,decreasing=T)
-  c_0<-kappa[b]==0
-  #calculate ratios for top Rej.Bound tau values
-  ratio<-c();temp_0<-0
-  for(i in 1:length(b)){
-    #if(i==1){temp_0=c_0[i]}
-    temp_0<-temp_0+c_0[i]
-    temp_1<-i-temp_0
-    temp_ratio<-(1/M+1/M*temp_1)/max(1,temp_0)
-    ratio<-c(ratio,temp_ratio)
-    if(i>Rej.Bound){break}
-  }
-  #calculate q values for top Rej.Bound values
-  q<-rep(1,length(tau));index_bound<-max(which(tau[b]>0))
-  for(i in 1:length(b)){
-    temp.index<-i:min(length(b),Rej.Bound,index_bound)
-    if(length(temp.index)==0){next}
-    q[b[i]]<-min(ratio[temp.index])*c_0[i]+1-c_0[i]
-    if(i>Rej.Bound){break}
-  }
-  return(q)
-}
-
-
-powerKSD = rep(500, 20)
-TrateKSD = matrix(0, 500, 20)
-FrateKSD = matrix(0, 500, 20)
-DifTiKSD = matrix(0, 500, 20)
-
-for (i in 1:20)
-{
-  load(paste0('Mulist', i, '.RData'))
-  
-  nsimu = length(res); p = 8192
-  EstR = matrix(0, nsimu, p)
-  
-  for (j in 1:nsimu)
-  {
-    result.single = res[[j]]$reKSD$result.single
-    result.window = res[[j]]$reKSD$result.window
-    
-    if (is.null(result.single))
-    {
-      result = result.window
-    }
-    else
-    {
-      temp<-result.window[,match(colnames(result.single),colnames(result.window))]
+      result.single = reKSD$result.single
+      result.window = reKSD$result.window
       
-      result<-rbind(result.single,temp)
+      result.single[, c(2, 3, 4, 5)] = result.single[, c(2, 3, 4, 5)] + startH[hh]
+      result.window[, c(2, 3, 4, 5)] = result.window[, c(2, 3, 4, 5)] + startH[hh]
+      
+      R.single = rbind(R.single, result.single)
+      R.window = rbind(R.window, result.window)
     }
     
-    result<-result[order(result[,2]),]
-    result<-result[order(result[,1]),]
-    
-    q<-MK.q.byStat(result[,'kappa'],result[,'tau'],M=5)
-    result.summary<-cbind(result[,1:5],q,result[,-(1:5)])
-    colnames(result.summary)[6]<-'Qvalue'
-    
-    result.summary = as.data.frame(result.summary)
+    result.summary = as.data.frame(KS.summary(R.single, R.window, 5))
     indsel = which(result.summary$Qvalue < 0.05)
+    result.significant = result.summary[indsel, ]
     
-    if (length(indsel != 0))
+    if (nrow(result.significant) != 0)
     {
-      for (k in 1:length(indsel))
+      startind = result.significant$actual_start
+      endind = result.significant$actual_end
+    }
+    
+    KnockoffScreen_Det = c(KnockoffScreen_Det, list(data.frame(startind, endind)))
+    
+    ##############################################################################################################
+    startind = c(); endind = c(); Qn = c(); quantileMax = rep(-9999, 1000)
+    for (hh in 1:10)
+    {
+      load(paste0('Genetic_RES/QSCAN_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
+      
+      quantileMax = pmax(quantileMax, reSCQ$SCAN_thres_boot)
+      if (sum(reSCQ$SCAN_res) > 1)
       {
-        locate = result.summary$actual_start[indsel[k]]:result.summary$actual_end[indsel[k]]
-        EstR[j, locate] = 1
+        if (is.null(ncol(reSCQ$SCAN_res)))
+        {
+          startind = c(startind, reSCQ$SCAN_res[2] + startH[hh])
+          endind = c(endind, reSCQ$SCAN_res[3] + startH[hh])
+          Qn = c(Qn, reSCQ$SCAN_res[1])
+        }
+        else
+        {
+          startind = c(startind, reSCQ$SCAN_res[, 2] + startH[hh])
+          endind = c(endind, reSCQ$SCAN_res[, 3] + startH[hh])
+          Qn = c(Qn, reSCQ$SCAN_res[, 1])
+        }
       }
-      
-      DifTiKSD[j, i] = as.numeric(res[[j]]$diffKSD, units = 'secs')
     }
-    else
+    
+    thresMax = quantile(quantileMax, 1 - alpha)
+    if (!is.null(Qn))
     {
-      powerKSD[i] = powerKSD[i] - 1
+      index_sel = which(Qn > thresMax)
+      
+      if (length(index_sel > 0))
+      {
+        startind = startind[index_sel]
+        endind = endind[index_sel]
+      }
+      else
+      {
+        startind = c(); endind = c()
+      }
     }
+    
+    QSCAN_Det = c(QSCAN_Det, list(data.frame(startind, endind)))
+    
+    ##############################################################################################################
+    startind = c(); endind = c(); Qn = c(); quantileMax = rep(-9999, 2000)
+    for (hh in 1:10)
+    {
+      load(paste0('Genetic_RES/SCANG-STAAR_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
+      
+      quantileMax = pmax(quantileMax, reSCT$SCANG_O_thres_boot)
+      if (sum(reSCT$SCANG_O_res) > 1)
+      {
+        if (is.null(ncol(reSCT$SCANG_O_res)))
+        {
+          startind = c(startind, reSCT$SCANG_O_res[2] + startH[hh])
+          endind = c(endind, reSCT$SCANG_O_res[3] + startH[hh])
+          Qn = c(Qn, reSCT$SCANG_O_res[1])
+        }
+        else
+        {
+          startind = c(startind, reSCT$SCANG_O_res[, 2] + startH[hh])
+          endind = c(endind, reSCT$SCANG_O_res[, 3] + startH[hh])
+          Qn = c(Qn, reSCT$SCANG_O_res[, 1])
+        }
+      }
+    }
+    
+    thresMax = quantile(quantileMax, 1 - alpha)
+    if (!is.null(Qn))
+    {
+      index_sel = which(Qn > thresMax)
+      
+      if (length(index_sel > 0))
+      {
+        startind = startind[index_sel]
+        endind = endind[index_sel]
+      }
+      else
+      {
+        startind = c(); endind = c()
+      }
+    }
+    
+    STAARO_Det = c(STAARO_Det, list(data.frame(startind, endind)))
+    
+    ##############################################################################################################
+    startind = c(); endind = c(); Qn = c(); quantileMax = rep(-9999, 2000)
+    for (hh in 1:10)
+    {
+      load(paste0('Genetic_RES/SCANG-STAAR_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
+      
+      quantileMax = pmax(quantileMax, reSCT$SCANG_S_thres_boot)
+      if (sum(reSCT$SCANG_S_res) > 1)
+      {
+        if (is.null(ncol(reSCT$SCANG_S_res)))
+        {
+          startind = c(startind, reSCT$SCANG_S_res[2] + startH[hh])
+          endind = c(endind, reSCT$SCANG_S_res[3] + startH[hh])
+          Qn = c(Qn, reSCT$SCANG_S_res[1])
+        }
+        else
+        {
+          startind = c(startind, reSCT$SCANG_S_res[, 2] + startH[hh])
+          endind = c(endind, reSCT$SCANG_S_res[, 3] + startH[hh])
+          Qn = c(Qn, reSCT$SCANG_S_res[, 1])
+        }
+      }
+    }
+    
+    thresMax = quantile(quantileMax, 1 - alpha)
+    if (!is.null(Qn))
+    {
+      index_sel = which(Qn > thresMax)
+      
+      if (length(index_sel > 0))
+      {
+        startind = startind[index_sel]
+        endind = endind[index_sel]
+      }
+      else
+      {
+        startind = c(); endind = c()
+      }
+    }
+    
+    STAARS_Det = c(STAARS_Det, list(data.frame(startind, endind)))
+    
+    ##############################################################################################################
+    startind = c(); endind = c(); Qn = c(); quantileMax = rep(-9999, 2000)
+    for (hh in 1:10)
+    {
+      load(paste0('Genetic_RES/SCANG-STAAR_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
+      
+      quantileMax = pmax(quantileMax, reSCT$SCANG_B_thres_boot)
+      if (sum(reSCT$SCANG_B_res) > 1)
+      {
+        if (is.null(ncol(reSCT$SCANG_B_res)))
+        {
+          startind = c(startind, reSCT$SCANG_B_res[2] + startH[hh])
+          endind = c(endind, reSCT$SCANG_B_res[3] + startH[hh])
+          Qn = c(Qn, reSCT$SCANG_B_res[1])
+        }
+        else
+        {
+          startind = c(startind, reSCT$SCANG_B_res[, 2] + startH[hh])
+          endind = c(endind, reSCT$SCANG_B_res[, 3] + startH[hh])
+          Qn = c(Qn, reSCT$SCANG_B_res[, 1])
+        }
+      }
+    }
+    
+    thresMax = quantile(quantileMax, 1 - alpha)
+    if (!is.null(Qn))
+    {
+      index_sel = which(Qn > thresMax)
+      
+      if (length(index_sel > 0))
+      {
+        startind = startind[index_sel]
+        endind = endind[index_sel]
+      }
+      else
+      {
+        startind = c(); endind = c()
+      }
+    }
+    
+    STAARB_Det = c(STAARB_Det, list(data.frame(startind, endind)))
+    
+    ##################################################################################################################
+    startind = c(); endind = c()
+    
+    for (hh in 1:10)
+    {
+      load(paste0('Genetic_RES/4S_delta = ', delta, '_hh = ', hh, '_seed = ', seed, '.RData'))
+      
+      if (nrow(reSSS$SSSS_Res) != 0)
+      {
+        startind = c(startind, reSSS$SSSS_Res$startind + startH[hh])
+        endind = c(endind, reSSS$SSSS_Res$endind + startH[hh])
+      }
+    }
+    
+    SSSS_Det = c(SSSS_Det, list(data.frame(startind, endind)))
     
   }
   
-  true.ind = rep(0, 8192)
-  true.ind[which(mu != 0)] = 1
-  true.ind[which(mu == 0)] = -2
-  
-  for (l in 1:nsimu)
-  {
-    if (length(which(EstR[l, ] != 0)) != 0)
-    {
-      Diffl = EstR[l, ] - true.ind
-      
-      TrateKSD[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
-      FrateKSD[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
-    }
-  }
+  true_causal = true_mat[i, ]
+  save(list = c('BiRSDCF_Det', 'true_causal'), file = paste0('Genetic_RES/BiRS-DCF_delta = ', delta, '.RData'))
+  save(list = c('BiRSCL_Det', 'true_causal'), file = paste0('Genetic_RES/BiRS-CL_delta = ', delta, '.RData'))
+  save(list = c('QSCAN_Det', 'true_causal'), file = paste0('Genetic_RES/QSCAN_delta = ', delta, '.RData'))
+  save(list = c('STAARO_Det', 'true_causal'), file = paste0('Genetic_RES/STAARO_delta = ', delta, '.RData'))
+  save(list = c('STAARS_Det', 'true_causal'), file = paste0('Genetic_RES/STAARS_delta = ', delta, '.RData'))
+  save(list = c('STAARB_Det', 'true_causal'), file = paste0('Genetic_RES/STAARB_delta = ', delta, '.RData'))
+  save(list = c('KnockoffScreen_Det', 'true_causal'), file = paste0('Genetic_RES/KnockoffScreen_delta = ', delta, '.RData'))
+  save(list = c('SSSS_Det', 'true_causal'), file = paste0('Genetic_RES/4S_delta = ', delta, '.RData'))
 }
-
-save(list = c('FrateKSD', 'TrateKSD', 'powerKSD', 'DifTiKSD'), file = 'KSD_Describe.RData')
-
-
