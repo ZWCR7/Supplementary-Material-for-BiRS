@@ -143,8 +143,22 @@ for (l in 1:length(mulist))
     #print('   SCQ: end')
     ############################################################################
     
+    aaSSS = Sys.time()
+    reSSS = SSSSDetect(Xi, Yi, length.gap = 32, Lmin = 1, MB, alpha)
+    bbSSS = Sys.time()
+    
+    diffSSS = bbSSS - aaSSS
+    #############################################################################
+
+    print('   LRS: start')
+    aaLRS = Sys.time()
+    reLRS = ScanM(Xi, Yi, Lmin, Lmax, skip = 1, MB, alpha)
+    bbLRS = Sys.time()
+    
+    diffLRS = bbLRS - aaLRS
+    print('   LRS: end')
      
-    return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reKSD = reKSD, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffKSD = diffKSD))
+    return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reKSD = reKSD, reSSS = reSSS, reLRS = reLRS, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffKSD = diffKSD, diffSSS = diffSSS, diffLRS = diffLRS))
   }
   
   cl = makeCluster(100)
