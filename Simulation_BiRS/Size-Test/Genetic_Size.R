@@ -88,7 +88,7 @@ source('BlockBiRS.R')
 source('4S_Algorithm.R')
 load('part numbers.RData')
 
-n = 6000; m = 4000; nsimu = 250
+n = 6000; m = 4000; nsimu = 1000
 MB = 1000; alpha = 0.05
 
 SimuL = function(s)
@@ -112,22 +112,15 @@ SimuL = function(s)
       
       for (part in 1:numb)
       {
-        load(paste0('Genetic_X_Size/Genetic_X_block', block, '_part', part, '_seed', s, '.RData'))
-        pp = ncol(Xpar)
-        
-        #LD = nearPD(corg, corr = T, maxit = 100)$mat
-        
-        #LD = as.matrix(LD)
-        #colnames(LD) = rownames(LD)
-        
+        load(paste0('corMatrixPD/block', b, '_part_', part, '_cor.RData'))
+        pp = ncol(LD)
+  
         p.et = p.st + pp - 1
-        PHRED_hh = rbind(PHRED_hh, PHRED[p.st:p.et, ])
         
-        # XLb = as.matrix(genCorGen(n = n, nvars = pp, params1 = MAFX[p.st:p.et], dist = 'binary', corMatrix = LD, wide = T))[, -1]
-        # XRb = as.matrix(genCorGen(n = n, nvars = pp, params1 = MAFX[p.st:p.et], dist = 'binary', corMatrix = LD, wide = T))[, -1]
-        # 
-        # YLb = as.matrix(genCorGen(n = m, nvars = pp, params1 = MAFY[p.st:p.et], dist = 'binary', corMatrix = LD, wide = T))[, -1]
-        # YRb = as.matrix(genCorGen(n = m, nvars = pp, params1 = MAFY[p.st:p.et], dist = 'binary', corMatrix = LD, wide = T))[, -1]
+        XLb = as.matrix(genCorGen(n = n+m, nvars = pp, params1 = MAFX[p.st:p.et], dist = 'binary', corMatrix = LD, wide = T))[, -1]
+        XRb = as.matrix(genCorGen(n = n+m, nvars = pp, params1 = MAFX[p.st:p.et], dist = 'binary', corMatrix = LD, wide = T))[, -1]
+
+        Xpar = XLb + XRb
         
         Xi = cbind(Xi, Xpar[(1:n), ])
         Yi = cbind(Yi, Xpar[((n+1):(n+m)), ])
@@ -163,7 +156,6 @@ SimuL = function(s)
     #print('   BSC: start')
     aaBSC = Sys.time()
     reBSC = SigDetCL(Xi, Yi, foldlen, trunc = 5, alpha = alpha/10)
-    #reBSC = BiRS_CL_Block(Xi, Yi, foldlen, trunc = 4, alpha, ReMax = 10)
     bbBSC = Sys.time()
     
     diffBSC = bbBSC - aaBSC
@@ -184,29 +176,6 @@ SimuL = function(s)
     ############################################################################
     
     #print('   SCQ: start')
-    # aaKSD = Sys.time()
-    # 
-    # window.bed = c()
-    # chr = 1
-    # 
-    # pos.tag = seq(1, p_i, by = floor(1.5/400*p_i))
-    # window.bed = cbind(chr, pos.tag, pos.tag + floor(1.5/200*p_i) - 3)
-    # window.bed = window.bed[order(as.numeric(window.bed[, 2])),]
-    # 
-    # #window.bed<-window.bed[order(as.numeric(window.bed[,2])),]
-    # 
-    # result.prelim = KS.prelim(phenotype, out_type = "D")
-    # region.pos = unique(c(seq(1, p_i, by = floor(p_i/2)), p_i))
-    # reKSD = KSDetG(result.prelim, genotype, window.bed, region.pos, M = 5, thres.single = 0.05, thres.ultrarare = 1, thres.missing = 0.1,
-    #                impute.method = 'fixed', bigmemory = T, leveraging = T, LD.filter = 0.75)
-    # bbKSD = Sys.time()
-    # 
-    # diffKSD = bbKSD - aaKSD
-    # save(list = c('reKSD', 'diffKSD'), file = paste0('Genetic_RES1/KnockoffScreen_delta = ', deltav[j], '_hh = ', hh, '_seed = ', s, '.RData'))
-    
-    ############################################################################
-    
-    #print('   SCQ: start')
     aaSCT = Sys.time()
     phenotypedata = data.frame(phenotype, covariate)
     res.null = fit_null_glm_SCANG(phenotype~-1+covariate, data = phenotypedata, family = 'binomial')
@@ -215,17 +184,6 @@ SimuL = function(s)
 
     diffSCT = bbSCT - aaSCT
     save(list = c('reSCT', 'diffSCT'), file = paste0('Genetic_Size_Res/SCANG-STAAR_delta = ', 0, '_hh = ', hh, '_seed = ', s, '.RData'))
-    
-    ############################################################################
-    
-    # aaSTA = Sys.time()
-    # phenotypedata = data.frame(phenotype, covariate)
-    # res.null1 = fit_null_glm(phenotype~-1+covariate, data = phenotypedata, family = 'binomial')
-    # reSTA = STAAR(genotype = genotype, obj_nullmodel = res.null1, annotation_phred = PHRED_hh, rare_maf_cutoff = 1, rv_num_cutoff = 1)
-    # bbSTA = Sys.time()
-    # 
-    # diffSTA = bbSTA - aaSTA
-    # save(list = c('reSTA', 'diffSTA'), file = paste0('Genetic_RES1/STAAR_delta = ', deltav[j], '_hh = ', hh, '_seed = ', s, '.RData'))
     
     ############################################################################
     
