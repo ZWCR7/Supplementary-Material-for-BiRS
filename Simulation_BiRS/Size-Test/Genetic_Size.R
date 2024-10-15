@@ -83,7 +83,6 @@ for (j in 1:7)
   MAFYMat[j, ] = MAFY
 }
 
-source('KSDetGenetic.R')
 source('BlockBiRS.R')
 source('4S_Algorithm.R')
 load('part numbers.RData')
