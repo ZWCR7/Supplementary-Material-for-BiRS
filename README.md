@@ -4,7 +4,9 @@ Supplementary codes and tables for BiRS
 ## Data and software availability
 - Previous data published in UK Biobank were used for this work and this research has been conducted using UK Biobank Resource under project 79237. One can refer to 
 https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data download or detailed description of UKB data.
+- All WGS studies are conducted in the UK Biobank Research Analysis Platform (RAP), see https://ukbiobank.dnanexus.com/landing for details.
 - PLINK2.0 was used to pre-treatment UKB data, see https://www.cog-genomics.org/plink/2.0/ for detailed manuls of using PLINK2.0.
+- cosi2 was used to generated simulation data, see https://github.com/broadinstitute/cosi2 for detaild manuls of using cosi2.
 
 ## GWAS and WGS results
 - *GWAS-BiRS.csv*: GWAS results of BiRS
@@ -22,44 +24,71 @@ https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data 
 
 2. Directory *Simulation_BiRS* contains the main functions for the simulations. Specifically, 
 - The R script ***KSDet*** contains the code for applying KnockoffScreen method to normal setting in simulation.
-- The R script ***Speed-Test*** contains the code for calculating computational times of BiRS-DCF, DCF-SCAN, Q-SCAN and KnockoffScreen.
+- The R script ***4S_Algorithm*** contains the code for applying 4S method to simulation.
+- The R script ***LRS_Detect*** contains the code for applying LRS method to simulation.
+- The R script ***Speed-Test*** contains the code for calculating computational times of these methods under genetic setting.
 
-- The R script ***Size-Test/Size-Test*** contains the contains the code for generating data and conducting simulation for size validation of BiRS-DCF, BiRS-CL and Q-SCAN in all settings.
-- The R scripts ***Size-Test/Describe_Size*** contains the code for generating tables of the size validation in all settings.
-
-- The R script ***M-dependence/Normal_ESBA*** contains the code for generating data and conducting simulation for ''M-dependence with equal covariance and non-decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R script ***M-dependence/Normal_NSBA*** contains the code for generating data and conducting simulation for ''M-dependence with unequal covariance and non-decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R script ***M-dependence/Normal_ESBA_Decay*** conntains the code for generating data and conducting simulation for ''M-dependence with equal covariance and decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R script ***M-dependence/Normal_NSBA_Decay*** contains the code for generating data and conducting simulation for ''M-dependence with unequal covariance and decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
+- The R script ***M-dependence/Normal_ESBA*** contains the code for generating data and conducting simulation for ''M-dependence with equal covariance and non-decay signal (MES)'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
+- The R script ***M-dependence/Normal_NSBA*** contains the code for generating data and conducting simulation for ''M-dependence with unequal covariance and non-decay signal (MNS)'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
+- The R script ***M-dependence/Normal_ESBA_Decay*** conntains the code for generating data and conducting simulation for ''M-dependence with equal covariance and decay signal (WES)'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
+- The R script ***M-dependence/Normal_NSBA_Decay*** contains the code for generating data and conducting simulation for ''M-dependence with unequal covariance and decay signal (WNS)'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
 - The R scripts ***M-dependence/Describe*** and ***M-dependence/Describe_Decay*** contain the code for generating description information of the detection results under M-dependence covariance structure.  
 - The R scripts ***M-dependence/Organize*** and ***M-dependence/Organize_Decay*** contain the code for generating figures and tables of the detection results under M-dependence covariance structure.
 
-- The R script ***Weak-dependence/Normal_ESBA*** contains the code for generating data and conducting simulation for ''Weak-dependence with equal covariance and non-decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R script ***Weak-dependence/Normal_NSBA*** contains the code for generating data and conducting simulation for ''Weak-dependence with unequal covariance and non-decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R script ***Weak-dependence/Normal_ESBA_Decay*** conntains the code for generating data and conducting simulation for ''Weak-dependence with equal covariance and decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R script ***Weak-dependence/Normal_NSBA_Decay*** contains the code for generating data and conducting simulation for ''Weak-dependence with unequal covariance and decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
+- The R script ***Weak-dependence/Normal_ESBA*** contains the code for generating data and conducting simulation for ''Weak-dependence with equal covariance and non-decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
+- The R script ***Weak-dependence/Normal_NSBA*** contains the code for generating data and conducting simulation for ''Weak-dependence with unequal covariance and non-decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
+- The R script ***Weak-dependence/Normal_ESBA_Decay*** conntains the code for generating data and conducting simulation for ''Weak-dependence with equal covariance and decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
+- The R script ***Weak-dependence/Normal_NSBA_Decay*** contains the code for generating data and conducting simulation for ''Weak-dependence with unequal covariance and decay signal'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
 - The R scripts ***Weak-dependence/Describe*** and ***Weak-dependence/Describe_Decay*** contain the code for generating description information of the detection results under Weak-dependence covariance structure. 
 - The R scripts ***Weak-dependence/Organize*** and ***Weak-dependence/Organize_Decay*** contain the code for generating figures and tables of the detection results under Weak-dependence covariance structure.
 
-- The R script ***KSDetGenetic*** contains the code for applying KnockoffScreen method to genetic setting in simulation.
+- The scripts ***Genetic_Setting/parama_ukb*** and ***Genetic_Setting/recParams_ukb*** contains the parameters for generating the haplotypes by cosi-2.
+- The R scripts ***Genetic_Setting/BinaryGenerator*** contains the code for generating the binary files (.bim, .bed, .fam) of simulated haplotypes from cosi-2.
+- The R scripts ***Genetic_Setting/get_corMat*** and ***Genetic_Setting/get_PDcorMat*** contain the code for generating the LD matrix of simulated sequence data.
+- The R script ***Genetic_Setting/KSDetGenetic*** contains the code for applying KnockoffScreen method to genetic setting in simulation.
+- The R script ***Genetic_Setting/Block_BiRS*** contains the code for applying BiRS method to genetic setting in simulation.
 - The R script ***Genetic_Setting/Genetic_Setting*** contains the code for generating data and conducting simulation for genetic setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
-- The R scripts ***Weak-dependence/Describe*** and ***Weak-dependence/Describe_Decay*** contain the code for generating description information of the detection results under Weak-dependence covariance structure. 
-- The R scripts ***Weak-dependence/Organize*** and ***Weak-dependence/Organize_Decay*** contain the code for generating figures and tables of the detection results under Weak-dependence covariance structure.
+- The R scripts ***Genetic_Setting/Describe_Genetic*** contains the code for generating description information of the detection results in genetic setting. 
+- The R scripts ***Genetic_Setting/Organize_Genetic*** contains the code for generating figures and tables of the detection results in genetic setting.
 
-3. Directory *Application_Code* contains the main functions for quality control and performing GWAS on UK Biobank data. Specifically, 
+- The R script ***Size-Test/Size-Test*** contains the contains the code for generating data and conducting simulation for size validation of BiRS-DCF, BiRS-CL, Q-SCAN, 4S and LRS in normal settings.
+- The R script ***Size-Test/Genetic_Size*** contains the contains the code for generating data and conducting simulation for size validation of BiRS-DCF, BiRS-CL, Q-SCAN, 4S and SCANG-STAAR in genetic setting.
+- The R scripts ***Size-Test/Describe_Size*** contains the code for generating tables of the size validation in normal settings.
+- The R scripts ***Size-Test/Describe_Genetic_Size*** contains the code for generating tables of the size validation in genetic setting.
+
+
+3. Directory *Application_Code* contains the main functions for quality control and performing GWAS and WGS on UK Biobank data. Specifically, 
 - The R scripts ***Pretreatment/CTtraits*** and ***Pretreatment/covariate*** generate samples and covariates we needed from the main dataset of UK Biobank.
 - The R scripts ***Pretreatment/SampleQC*** and ***Pretreatment/VariantQC*** perform the sample and variant quality control after generating .vcf file for each chromosome using PLINK 2.0 (the quality control on HWE and MAF performed at the same time as the .vcf file be generated)
 - The R script ***Pretreatment/SampleGLM*** generates data for Q-SCAN to perform GWAS.
 - The R script ***Pretreatment/GenerateFinalVariant*** generates the information for the selected variants for performing GWAS.
 - The R script ***Pretreatment/SizeSampleGenerator*** generates the samples for performing permutation test in each chromosome.
 - The R scripts ***BiRS/BiRSGenomeSize***, ***QSCAN/QScanGenomeSize*** and ***BiRS/BiCLGenomeSize*** perform permutation tests of BiRS-DCF, BiRS-CL and QSCAN.
-- The R scripts ***BiRS/BiRSGenome***, ***QSCAN/QScanGenome*** and ***KnockoffScreen/KSGWAS*** perform GWAS on C50 Malignant neoplasms of breast using UK Biobank data by BiRS-DCF, QSCAN and KnockoffScreen.
+- The R scripts ***BiRS/BiRSGenome***, ***QSCAN/QScanGenome***, ***KnockoffScreen/KSGWAS*** and ***4S_GWAS*** perform GWAS on C50 Malignant neoplasms of breast using UK Biobank data by BiRS-DCF, QSCAN, KnockoffScreen and 4S.
 - The R script ***sh_file_generator*** generates .sh file for performing GWAS on C50 Malignant neoplasms of breast using UK Biobank data using regenie.
 - The .sh files ***fit.sh*** and ***test.sh*** perform GWAS on C50 Malignant neoplasms of breast using UK Biobank data using regenie.
-- The .csv files *C50Breast_BiRS.csv*, *C50Breast_Scan*, *C50Breast_KSGWAS* and *C50Breast_Regenie* are GWAS results of the four methods, which are organized for plotting signal regions. 
-- The .csv files *C50Breast_chr11_gene.csv*, *C50Breast_chr12_gene.csv* and *C50Breast_chr19_gene.csv* are genomic locations of certain genes in chromosomes 11, 12 and 19, respectively.
 - The R script ***plot_gene*** plots identified signal regions of the four methods.
+  
+- The R script ***WGS/Generate_Block_Index*** contains the code for generating blocks for detection.
+- The R script ***WGS/BiRS-WGS-Chr1*** performs whole genome sequencing association studies in chromosome 1 in rap platform (for other chromosomes, change the parameter CHR).
+- The R script ***WGS/BlockBiRS_WGS*** contains the code for applying BiRS method to WGS in rap platform.
+- The R script ***WGS/Summary_WGS*** contains the code for summarizing the WGS results.
 
+
+4. Directory *Supplementary_Code* contains the additional simulations in Supplementary Material. Specifically, 
+- The R script ***BiRS-Cpts/SummaryBiRS***, ***BiRS-Cpts/SeedBiRS***, ***BiRS-Cpts/WildBiRS*** and ***BiRS-Cpts/Seeded-BiRS-DCF*** contain the code for applying SBB, WBB and SBS.
+- The R script ***BiRS-Cpts/MES-BiRS-Cpts***,  ***BiRS-Cpts/MNS-BiRS-Cpts***,  ***BiRS-Cpts/WES-BiRS-Cpts*** and  ***BiRS-Cpts/MES-BiRS-Cpts*** contain the codes for generating data and conducting simulations for MES, MNS, WES and WNS setting.
+- The R scripts ***BiRS-Cpts/Summary*** contains the code for generating description information of the detection results under all settings.  
+- The R scripts ***BiRS-Cpts/plot*** and ***BiRS-Cpts/plot-BSB*** contain the code for generating figures of the detection results.
+
+- The R script ***Scan-Cpts/Wild_Detect*** and ***Scan-Cpts/Seed_Detect*** contain the code for applying WBS and SBS.
+- The R script ***Scan-Cpts/MES-Scan-Cpts***,  ***Scan-Cpts/MNS-Scan-Cpts***,  ***Scan-Cpts/WES-Scan-Cpts*** and  ***Scan-Cpts/MES-Scan-Cpts*** contain the codes for generating data and conducting simulations for MES, MNS, WES and WNS setting.
+- The R scripts ***BiRS-Cpts/Summary*** contains the code for generating description information of the detection results under all settings.  
+- The R scripts ***BiRS-Cpts/plot*** contains the code for generating figures of the detection results.
+
+- The R script ***Sensitivity/MES-Sensitivity***,  ***Sensitivity/MNS-Sensitivity***,  ***Sensitivity/WES-Sensitivity*** and  ***Sensitivity/WNS-Sensitivity*** contain the codes for generating data and conducting simulations for MES, MNS, WES and WNS setting.
+- The R scripts ***Sensitivity/Summary*** contains the code for generating description information and figures of the detection results under all settings.
+  
 
 ### Workflows
 Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*. 
