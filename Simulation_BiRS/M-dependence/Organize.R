@@ -1,5 +1,3 @@
-library(ggplot2)
-library(patchwork)
 rm(list = ls())
 
 load('Normal_ESBA/BSD_Describe.RData')
