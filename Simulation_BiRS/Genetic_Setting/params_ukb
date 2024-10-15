@@ -1,0 +1,26 @@
+
+# sample file
+# comments have #s in front of them
+# newlines don't matter.
+
+#-- options that could be uncommented
+#infinite_sites yes
+#random_seed 12345   # Specifies a particular random number seed
+
+# in bp.
+length 10000000
+
+# per bp per generation
+mutation_rate 1.5e-8
+
+recomb_file model.test
+
+gene_conversion_relative_rate 0.3
+
+# population info
+
+pop_define 1 european
+
+#european
+pop_size 1 100000
+sample_size 1 100000
