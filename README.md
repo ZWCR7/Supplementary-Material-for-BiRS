@@ -6,11 +6,13 @@ Supplementary codes and tables for BiRS
 https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data download or detailed description of UKB data.
 - PLINK2.0 was used to pre-treatment UKB data, see https://www.cog-genomics.org/plink/2.0/ for detailed manuls of using PLINK2.0.
 
-## GWAS results of BiRS and Q-SCAN
+## GWAS and WGS results
 - *GWAS-BiRS.csv*: GWAS results of BiRS
 - *GWAS-Scan.csv*: GWAS results of Q-SCAN
 - *GWAS-KS.csv*: GWAS results of KnockoffScreen
+- *GWAS-4S.csv*: GWAS results of 4S
 - *GWAS-REGENIE.csv*: GWAS results of regenie
+- *WGS-BiRS-Region*: Region-wise WGS results of BiRS
 
 ## Code for BiRS
 ### Overview
