@@ -104,9 +104,7 @@ STAARB_Det = list()
 KnockoffScreen_Det = list()
 SSSS_Det = list()
 
-seedv = c(1:140, 142:250)
-
-for (seed in seedv)
+for (seed in 1:1000)
 {
   BSDCFcandidate = NULL
   block_index = NULL
@@ -378,7 +376,7 @@ save(list = c('STAARB_Det'), file = paste0('Genetic_Size_Res/STAARB_delta = ', 0
 save(list = c('SSSS_Det'), file = paste0('Genetic_Size_Res/4S_delta = ', 0, '.RData'))
 
 sizeBiRSDCF = 0; sizeBiRSCL = 0; sizeQSCAN = 0; sizeSTAARO = 0; sizeSTAARB = 0; sizeSTAARS = 0; sizeSSSS = 0
-for (i in 1:249)
+for (i in 1:1000)
 {
   if (nrow(BiRSDCF_Det[[i]]) > 0) sizeBiRSDCF = sizeBiRSDCF + 1
   if (nrow(BiRSCL_Det[[i]]) > 0) sizeBiRSCL = sizeBiRSCL + 1
