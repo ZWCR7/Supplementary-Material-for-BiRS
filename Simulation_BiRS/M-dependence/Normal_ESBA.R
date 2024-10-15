@@ -62,6 +62,8 @@ for (setbeta in 1:dense)
 for (l in 1:length(mulist))
 {
   source('~/Simulation_BiRS/KSDet.R')
+  source('~/Simulation_BiRS/4S_Algorithm.R')
+  source('~/Simulation_BiRS/LRS_Detect.R')
   print(paste0(' mulist', l, ' :start'))
   
   p = 8192; D = 64; n = 600; m = 400; nsimu = 500
