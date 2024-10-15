@@ -109,7 +109,7 @@ for (i in 1:7)
   KnockoffScreen_Det = list()
   SSSS_Det = list()
   
-  for (seed in 1:25)
+  for (seed in 1:500)
   {
     BSDCFcandidate = NULL
     block_index = NULL
