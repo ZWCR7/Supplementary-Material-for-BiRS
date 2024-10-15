@@ -1,10 +1,4 @@
 CHR = 1
-setwd('~/WGS-BiRS-Chr', CHR)
-
-install.packages('BiRS_1.0.tar.gz', repo = NULL, type = 'source')
-install.packages('genio')
-install.packages('seqminer')
-install.packages('doParallel')
 
 library(BiRS)
 library(genio)
@@ -13,17 +7,13 @@ library(seqminer)
 library(foreach)
 library(doParallel)
 
-source('BlockBiRS.R')
+source('BlockBiRS_WGS.R')
 load('Breast_QC_Sample.RData')
 load(paste0('Block-Chr', CHR, '.RData'))
 
 partnum = nrow(Block_Index)
 
-#GenoPrefix = 'ukb24306_c19_b0_v1.bgen'
 GenoPrefix = paste0('/mnt/project/Bulk/Previous WGS releases/GATK and GraphTyper WGS/GraphTyper population level WGS variants, PLINK format [200k release]/ukb24305_c', CHR, '_b0_v1')
-
-# RES1 = Block_BiRS(phenotype = phenoBreast, GenoPrefix = GenoPrefix, Block.ind = c(11, 395345 - 2000,  395345 + 2000), subsample = sample_index, trunc = 4, alpha = 0.05)
-# save(list = c('RES1'), file = paste0('part_chr19.RData'))
 
 Parallel_BBiRS = function(part)
 {
