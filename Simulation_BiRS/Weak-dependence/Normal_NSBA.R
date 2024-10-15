@@ -72,6 +72,8 @@ for (setbeta in 1:dense)
 for (l in 1:length(mulist))
 {
   source('~/Simulation_BiRS/KSDet.R')
+  source('~/Simulation_BiRS/4S_Algorithm.R')
+  source('~/Simulation_BiRS/LRS_Detect.R')
   print(paste0(' mulist', l, ' :start'))
   
   p = 8192; n = 600; m = 400; nsimu = 500
@@ -134,8 +136,20 @@ for (l in 1:length(mulist))
     #print('   SCQ: end')
     ############################################################################
     
+    aaSSS = Sys.time()
+    reSSS = SSSSDetect(Xi, Yi, length.gap = 32, Lmin = 1, MB, alpha)
+    bbSSS = Sys.time()
     
-    return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reKSD = reKSD, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffKSD = diffKSD))
+    diffSSS = bbSSS - aaSSS
+    #############################################################################
+
+    aaLRS = Sys.time()
+    reLRS = ScanM(Xi, Yi, Lmin, Lmax, skip = 1, MB, alpha)
+    bbLRS = Sys.time()
+    
+    diffLRS = bbLRS - aaLRS
+     
+    return(list(reBSD = reBSD, reBSC = reBSC, reSCQ = reSCQ, reKSD = reKSD, reSSS = reSSS, reLRS = reLRS, diffBSD = diffBSD, diffBSC = diffBSC, diffSCQ = diffSCQ, diffKSD = diffKSD, diffSSS = diffSSS, diffLRS = diffLRS))
   }
   
   cl = makeCluster(100)
