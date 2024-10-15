@@ -212,6 +212,111 @@ for (i in 1:20)
 }
 
 save(list = c('FrateKSD', 'TrateKSD', 'powerKSD', 'DifTiKSD'), file = 'Normal_ESBA/KSD_Describe.RData')
+###############################################################################################################
+
+rm(list = ls())
+powerSSS = rep(500, 20)
+TrateSSS = matrix(0, 500, 20)
+FrateSSS = matrix(0, 500, 20)
+DifTiSSS = matrix(0, 500, 20)
+
+for (i in 1:20)
+{ 
+  load(paste0('Normal_ESBA/Mulist', i, '.RData'))
+  
+  nsimu = length(res); p = 8192
+  EstR = matrix(0, nsimu, p)
+  
+  for (j in 1:length(res))
+  {
+    if (length(res[[j]]$reSSS$SSSS_Res) != 0)
+    {
+      Resj = res[[j]]$reSSS$SSSS_Res
+      
+      DifTiSSS[j, i] = as.numeric(res[[j]]$diffSSS, units = 'secs')
+      
+      for (k in 1:nrow(Resj))
+      {
+        EstR[j, (Resj$startind[k]:Resj$endind[k])] = 1
+      }
+    }
+    else
+    {
+      powerSSS[i] = powerSSS[i] - 1
+    }
+  }
+  
+  true.ind = rep(0, p)
+  true.ind[which(mu != 0)] = 1
+  true.ind[which(mu == 0)] = -2
+  
+  for (l in 1:nsimu)
+  {
+    if (length(which(EstR[l, ] != 0)) != 0)
+    {
+      Diffl = EstR[l, ] - true.ind
+      
+      TrateSSS[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
+      FrateSSS[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
+    }
+  }
+}
+
+save(list = c('FrateSSS', 'TrateSSS', 'powerSSS', 'DifTiSSS'), file = 'Normal_ESBA/SSS_Describe.RData')
+############################################################################################################################
+
+rm(list = ls())
+powerLRS = rep(500, 20)
+TrateLRS = matrix(0, 500, 20)
+FrateLRS = matrix(0, 500, 20)
+DifTiLRS = matrix(0, 500, 20)
+
+for (i in 1:20)
+{ 
+  load(paste0('Normal_ESBA/Mulist', i, '.RData'))
+  
+  mu = mul
+  nsimu = length(res); p = 8192
+  EstR = matrix(0, nsimu, p)
+  
+  for (j in 1:length(res))
+  {
+    if (length(res[[j]]$reLRS$SCANM_Res) != 0)
+    {
+      Resj = res[[j]]$reLRS$SCANM_Res
+      
+      DifTiLRS[j, i] = as.numeric(res[[j]]$diffLRS, units = 'secs')
+      
+      for (k in 1:nrow(Resj))
+      {
+        EstR[j, (Resj$startind[k]:Resj$endind[k])] = 1
+      }
+    }
+    else
+    {
+      powerLRS[i] = powerLRS[i] - 1
+    }
+  }
+  
+  true.ind = rep(0, p)
+  true.ind[which(mu != 0)] = 1
+  true.ind[which(mu == 0)] = -2
+  
+  for (l in 1:nsimu)
+  {
+    if (length(which(EstR[l, ] != 0)) != 0)
+    {
+      Diffl = EstR[l, ] - true.ind
+      
+      TrateLRS[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
+      FrateLRS[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
+    }
+  }
+}
+
+save(list = c('FrateLRS', 'TrateLRS', 'powerLRS', 'DifTiLRS'), file = 'Normal_ESBA/LRS_Describe.RData')
+
+
 ############################################################################################################################################################
 ############################################################################################################################################################
 
@@ -429,3 +534,106 @@ for (i in 1:20)
 }
 
 save(list = c('FrateKSD', 'TrateKSD', 'powerKSD', 'DifTiKSD'), file = 'Normal_NSBA/KSD_Describe.RData')
+###################################################################################################################
+
+rm(list = ls())
+powerSSS = rep(500, 20)
+TrateSSS = matrix(0, 500, 20)
+FrateSSS = matrix(0, 500, 20)
+DifTiSSS = matrix(0, 500, 20)
+
+for (i in 1:20)
+{ 
+  load(paste0('Normal_NSBA/Mulist', i, '.RData'))
+  
+  nsimu = length(res); p = 8192
+  EstR = matrix(0, nsimu, p)
+  
+  for (j in 1:length(res))
+  {
+    if (length(res[[j]]$reSSS$SSSS_Res) != 0)
+    {
+      Resj = res[[j]]$reSSS$SSSS_Res
+      
+      DifTiSSS[j, i] = as.numeric(res[[j]]$diffSSS, units = 'secs')
+      
+      for (k in 1:nrow(Resj))
+      {
+        EstR[j, (Resj$startind[k]:Resj$endind[k])] = 1
+      }
+    }
+    else
+    {
+      powerSSS[i] = powerSSS[i] - 1
+    }
+  }
+  
+  true.ind = rep(0, p)
+  true.ind[which(mu != 0)] = 1
+  true.ind[which(mu == 0)] = -2
+  
+  for (l in 1:nsimu)
+  {
+    if (length(which(EstR[l, ] != 0)) != 0)
+    {
+      Diffl = EstR[l, ] - true.ind
+      
+      TrateSSS[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
+      FrateSSS[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
+    }
+  }
+}
+
+save(list = c('FrateSSS', 'TrateSSS', 'powerSSS', 'DifTiSSS'), file = 'Normal_NSBA/SSS_Describe.RData')
+################################################################################################################################
+
+rm(list = ls())
+powerLRS = rep(500, 20)
+TrateLRS = matrix(0, 500, 20)
+FrateLRS = matrix(0, 500, 20)
+DifTiLRS = matrix(0, 500, 20)
+
+for (i in 1:20)
+{ 
+  load(paste0('Normal_NSBA/Mulist', i, '.RData'))
+  
+  mu = mul
+  nsimu = length(res); p = 8192
+  EstR = matrix(0, nsimu, p)
+  
+  for (j in 1:length(res))
+  {
+    if (length(res[[j]]$reLRS$SCANM_Res) != 0)
+    {
+      Resj = res[[j]]$reLRS$SCANM_Res
+      
+      DifTiLRS[j, i] = as.numeric(res[[j]]$diffLRS, units = 'secs')
+      
+      for (k in 1:nrow(Resj))
+      {
+        EstR[j, (Resj$startind[k]:Resj$endind[k])] = 1
+      }
+    }
+    else
+    {
+      powerLRS[i] = powerLRS[i] - 1
+    }
+  }
+  
+  true.ind = rep(0, p)
+  true.ind[which(mu != 0)] = 1
+  true.ind[which(mu == 0)] = -2
+  
+  for (l in 1:nsimu)
+  {
+    if (length(which(EstR[l, ] != 0)) != 0)
+    {
+      Diffl = EstR[l, ] - true.ind
+      
+      TrateLRS[l, i] = length(which(Diffl == 0))/length(which(mu != 0))
+      FrateLRS[l, i] = length(which(Diffl == 3))/length(which(EstR[l, ] != 0))
+    }
+  }
+}
+
+save(list = c('FrateLRS', 'TrateLRS', 'powerLRS', 'DifTiLRS'), file = 'Normal_NSBA/LRS_Describe.RData')
