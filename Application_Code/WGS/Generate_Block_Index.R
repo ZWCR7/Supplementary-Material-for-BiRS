@@ -11,5 +11,9 @@ for (chr in 1:22)
   
   Block_Index = cbind(CHR, start, end)
   
-  save(Block_Index, file = paste0('Blocks-10kb/Block-Chr', chr, '.RData'))
+  save(Block_Index, file = paste0('Blocks-50kb/Block-Chr', chr, '.RData'))
 }
+
+system(paste0('tar -czvf Blocks-50kb.tar.gz Blocks-50kb'))
+system(paste0('dx upload Blocks-50kb.tar.gz'))
+
