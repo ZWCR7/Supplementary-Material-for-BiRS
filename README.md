@@ -103,20 +103,23 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 3. Create folder *Simulation_BiRS/Weak-dependence/Figures/* for saving the figures of the detection results under Weak-dependence covariance structure then run ***Simulation_BiRS/Weak-dependence/Organize.R*** to generate them.
 
 #### Simulation for comparing detection performance of different methods under genetic settings
-1. Using cosi2 and the parameter files ***Simulation_BiRS/Genetic_Setting/parama_ukb*** and ***Simulation_BiRS/Genetic_Setting/recParams_ukb*** to generate haplotypes.
-2. Create folder *Simulation_BiRS/Genetic_Setting/ukb_simu_txt/* and use the command line to separate the generated haplotype file into 1000 part and run ***Simulation_BiRS/Genetic_Setting/BinaryGenerator*** to get the binary files for sequence data (.bim, .bed, .fam), please create folder *Simulation_BiRS/Genetic_Setting/ukb_simu_binary/*.
-3. Using plink2 to merge the binary files in *Simulation_BiRS/Genetic_Setting/ukb_simu_binary/* into ***Simulation_BiRS/Genetic_Setting/genotype.bed (.fam, .bim)***.
-4. Run ***Simulation_BiRS/Genetic_Setting/get_corMat*** and ***Simulation_BiRS/Genetic_Setting/get_PDcorMat*** to get the LD matrix and MAF for generating data, please create folders *Simulation_BiRS/Genetic_Setting/corMatrix/*, *Simulation_BiRS/Genetic_Setting/corMatrixPD/* and *Simulation_BiRS/Genetic_Setting/MAFS/*.
-5. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
-6. Run ***Simulation_BiRS/Genetic_Setting/Describe_Genetic.R*** for generating description information of the detection results under genetic setting.
-7. Create folder *Simulation_BiRS/Genetic_Setting/Figures/* for saving the figures of the detection results under genetic setting then run ***Simulation_BiRS/Genetic_Setting/Organize_Genetic.R*** to generate them.
+1. Similarily, please make sure you have created correct folders to store simulation results.
+2. Using cosi2 and the parameter files ***Simulation_BiRS/Genetic_Setting/parama_ukb*** and ***Simulation_BiRS/Genetic_Setting/recParams_ukb*** to generate haplotypes.
+3. Create folder *Simulation_BiRS/Genetic_Setting/ukb_simu_txt/* and use the command line to separate the generated haplotype file into 1000 part and run ***Simulation_BiRS/Genetic_Setting/BinaryGenerator*** to get the binary files for sequence data (.bim, .bed, .fam), please create folder *Simulation_BiRS/Genetic_Setting/ukb_simu_binary/*.
+4. Using plink2 to merge the binary files in *Simulation_BiRS/Genetic_Setting/ukb_simu_binary/* into ***Simulation_BiRS/Genetic_Setting/genotype.bed (.fam, .bim)***.
+5. Run ***Simulation_BiRS/Genetic_Setting/get_corMat*** and ***Simulation_BiRS/Genetic_Setting/get_PDcorMat*** to get the LD matrix, MAF and part numbers (partnum.RData) for generating data, please create folders *Simulation_BiRS/Genetic_Setting/corMatrix/*, *Simulation_BiRS/Genetic_Setting/corMatrixPD/* and *Simulation_BiRS/Genetic_Setting/MAFS/*.
+6. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
+7. Run ***Simulation_BiRS/Genetic_Setting/Describe_Genetic.R*** for generating description information of the detection results under genetic setting.
+8. Create folder *Simulation_BiRS/Genetic_Setting/Figures/* for saving the figures of the detection results under genetic setting then run ***Simulation_BiRS/Genetic_Setting/Organize_Genetic.R*** to generate them.
 
 #### Simulation for comparing the empirical FWERs of different methods for different settings.
-1. Run ***Simulation_BiRS/Size-Test/Size-Test.R*** and ***Simulation_BiRS/Size-Test/Genetic_Size.R*** to generate the empirical FWERs of different methods for different settings (saving as .RData file).
-2. Run ***Simulation_BiRS/Size-Test/Describe_Size.R*** and ***Simulation_BiRS/Size-Test/Describe_Genetic_Size.R*** for generating tables of the empirical FWERs of different methods for different settings, which are the Table 1 and 2 in the main paper.
+1. Similarily, please make sure you have created correct folders to store simulation results.
+2. Run ***Simulation_BiRS/Size-Test/Size-Test.R*** and ***Simulation_BiRS/Size-Test/Genetic_Size.R*** to generate the empirical FWERs of different methods for different settings (saving as .RData file).
+3. Run ***Simulation_BiRS/Size-Test/Describe_Size.R*** and ***Simulation_BiRS/Size-Test/Describe_Genetic_Size.R*** for generating tables of the empirical FWERs of different methods for different settings, which are the Table 1 and 2 in the main paper.
 
 #### Simulation for comparing the computational time for different methods.
-1. Run ***Simulation_BiRS/Genetic_Setting/Speed-test.R*** and ***Simulation_BiRS/Genetic_Setting/Summary_Speed.R*** to generate the computational time for different methods.
+1. Similarily, please make sure you have created correct folders to store simulation results.
+2. Run ***Simulation_BiRS/Genetic_Setting/Speed-test.R*** and ***Simulation_BiRS/Genetic_Setting/Summary_Speed.R*** to generate the computational time for different methods.
 
 
 #### Data application: pre-treatment the ukbiobank data
