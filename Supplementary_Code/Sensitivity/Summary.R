@@ -1,6 +1,6 @@
 rm(list = ls())
 
-truncv = log(16:64, 2)
+truncv = 3：6
 snum = length(truncv)
 
 Trate = matrix(0, 100, snum)
@@ -43,7 +43,7 @@ for (i in 1:snum)
   
 }
 
-delta = 16:64
+delta = 3：6
 
 TPR = apply(Trate, 2, mean)
 FDR = apply(Frate, 2, mean)
@@ -53,7 +53,7 @@ mainTR = paste0('MES, beta = 4, Sensitive')
 
 jpeg(filename = nameTR, width = 1200, height = 900, quality = 100)
 plot(delta, TPR, type = 'b', pch = 1, lty = 1, lwd = 4, col = 1, main = mainTR, 
-     ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
+     ylab = "", xlab = "s", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
 lines(delta, FDR, type = "b", pch = 2, lty = 1, col = 2, lwd = 4)
 legend("right", c("TPR", "FDR"), pch = c(1, 2, 3), lty = 1, box.col = "grey", cex = 3.5, col = c(1, 2, 3), lwd = 4)
 dev.off()
@@ -61,7 +61,7 @@ dev.off()
 
 rm(list = ls())
 
-truncv = log(16:64, 2)
+truncv = 3:6
 snum = length(truncv)
 
 Trate = matrix(0, 100, snum)
@@ -104,7 +104,7 @@ for (i in 1:snum)
   
 }
 
-delta = 16:64
+delta = 3:6
 
 TPR = apply(Trate, 2, mean)
 FDR = apply(Frate, 2, mean)
@@ -114,7 +114,7 @@ mainTR = paste0('MNS, beta = 4, Sensitive')
 
 jpeg(filename = nameTR, width = 1200, height = 900, quality = 100)
 plot(delta, TPR, type = 'b', pch = 1, lty = 1, lwd = 4, col = 1, main = mainTR, 
-     ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
+     ylab = "", xlab = "s", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
 lines(delta, FDR, type = "b", pch = 2, lty = 1, col = 2, lwd = 4)
 legend("right", c("TPR", "FDR"), pch = c(1, 2, 3), lty = 1, box.col = "grey", cex = 3.5, col = c(1, 2, 3), lwd = 4)
 dev.off()
@@ -122,7 +122,7 @@ dev.off()
 
 rm(list = ls())
 
-truncv = log(16:64, 2)
+truncv = 3:6
 snum = length(truncv)
 
 Trate = matrix(0, 100, snum)
@@ -165,17 +165,17 @@ for (i in 1:snum)
   
 }
 
-delta = 16:64
+delta = 3:6
 
 TPR = apply(Trate, 2, mean)
 FDR = apply(Frate, 2, mean)
 
 nameTR = paste0('Figures/WES-Sensitive.jpg')
-mainTR = paste0('MES, beta = 4, Sensitive')
+mainTR = paste0('WES, beta = 4, Sensitive')
 
 jpeg(filename = nameTR, width = 1200, height = 900, quality = 100)
 plot(delta, TPR, type = 'b', pch = 1, lty = 1, lwd = 4, col = 1, main = mainTR, 
-     ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
+     ylab = "", xlab = "s", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
 lines(delta, FDR, type = "b", pch = 2, lty = 1, col = 2, lwd = 4)
 legend("right", c("TPR", "FDR"), pch = c(1, 2, 3), lty = 1, box.col = "grey", cex = 3.5, col = c(1, 2, 3), lwd = 4)
 dev.off()
@@ -184,7 +184,7 @@ dev.off()
 
 rm(list = ls())
 
-truncv = log(16:64, 2)
+truncv = 3:6
 snum = length(truncv)
 
 Trate = matrix(0, 100, snum)
@@ -227,17 +227,17 @@ for (i in 1:snum)
   
 }
 
-delta = 16:64
+delta = 3:6
 
 TPR = apply(Trate, 2, mean)
 FDR = apply(Frate, 2, mean)
 
 nameTR = paste0('Figures/WNS-Sensitive.jpg')
-mainTR = paste0('MES, beta = 4, Sensitive')
+mainTR = paste0('WNS, beta = 4, Sensitive')
 
 jpeg(filename = nameTR, width = 1200, height = 900, quality = 100)
 plot(delta, TPR, type = 'b', pch = 1, lty = 1, lwd = 4, col = 1, main = mainTR, 
-     ylab = "", xlab = "delta", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
+     ylab = "", xlab = "s", cex.lab = 3, cex.axis = 2.8, ylim = c(0, 1), cex.main = 4)
 lines(delta, FDR, type = "b", pch = 2, lty = 1, col = 2, lwd = 4)
 legend("right", c("TPR", "FDR"), pch = c(1, 2, 3), lty = 1, box.col = "grey", cex = 3.5, col = c(1, 2, 3), lwd = 4)
 dev.off()
