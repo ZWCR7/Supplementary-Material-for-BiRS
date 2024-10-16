@@ -26,7 +26,6 @@ https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data 
 - The R script ***KSDet*** contains the code for applying KnockoffScreen method to normal setting in simulation.
 - The R script ***4S_Algorithm*** contains the code for applying 4S method to simulation.
 - The R script ***LRS_Detect*** contains the code for applying LRS method to simulation.
-- The R script ***Speed-Test*** contains the code for calculating computational times of these methods under genetic setting.
 
 - The R script ***M-dependence/Normal_ESBA*** contains the code for generating data and conducting simulation for ''M-dependence with equal covariance and non-decay signal (MES)'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
 - The R script ***M-dependence/Normal_NSBA*** contains the code for generating data and conducting simulation for ''M-dependence with unequal covariance and non-decay signal (MNS)'' setting using BiRS-DCF, BiRS-CL, Q-SCAN, KnockoffScreen, 4S and LRS.
@@ -50,6 +49,7 @@ https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data 
 - The R script ***Genetic_Setting/Genetic_Setting*** contains the code for generating data and conducting simulation for genetic setting using BiRS-DCF, BiRS-CL, Q-SCAN and KnockoffScreen.
 - The R scripts ***Genetic_Setting/Describe_Genetic*** contains the code for generating description information of the detection results in genetic setting. 
 - The R scripts ***Genetic_Setting/Organize_Genetic*** contains the code for generating figures and tables of the detection results in genetic setting.
+- The R scripts ***Genetic_Setting/Speed-Test*** and ***Genetic_Setting/Summary_Speed*** contains the code for calculating computational times of these methods under genetic setting.
 
 - The R script ***Size-Test/Size-Test*** contains the contains the code for generating data and conducting simulation for size validation of BiRS-DCF, BiRS-CL, Q-SCAN, 4S and LRS in normal settings.
 - The R script ***Size-Test/Genetic_Size*** contains the contains the code for generating data and conducting simulation for size validation of BiRS-DCF, BiRS-CL, Q-SCAN, 4S and SCANG-STAAR in genetic setting.
@@ -116,7 +116,7 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 2. Run ***Simulation_BiRS/Size-Test/Describe_Size.R*** and ***Simulation_BiRS/Size-Test/Describe_Genetic_Size.R*** for generating tables of the empirical FWERs of different methods for different settings, which are the Table 1 and 2 in the main paper.
 
 #### Simulation for comparing the computational time for different methods.
-1. Run ***Simulation_BiRS/Speed-test.R*** to generate the computational time for different methods.
+1. Run ***Simulation_BiRS/Genetic_Setting/Speed-test.R*** and ***Simulation_BiRS/Genetic_Setting/Summary_Speed.R*** to generate the computational time for different methods.
 
 
 #### Data application: pre-treatment the ukbiobank data
