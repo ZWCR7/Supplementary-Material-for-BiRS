@@ -63,7 +63,7 @@ theta1[D] = 0; theta = sqrt(theta - theta1)
 
 mul = matrix(rep(mu, n), n, p, byrow = T)
 
-truncv = log(16:64, base = 2)
+truncv = 3:6
 SimuL = function(i)
 {
   set.seed(i)
