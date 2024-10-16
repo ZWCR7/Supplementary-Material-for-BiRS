@@ -85,7 +85,7 @@ for (j in 1:7)
 
 source('KSDetGenetic.R')
 source('BlockBiRS.R')
-source('4S_Algorithm.R')
+source('~/Simulation_BiRS/4S_Algorithm.R')
 load('part numbers.RData')
 
 n = 6000; m = 4000; nsimu = 500
