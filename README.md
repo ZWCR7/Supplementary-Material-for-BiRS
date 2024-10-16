@@ -103,18 +103,17 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 3. Create folder *Simulation_BiRS/Weak-dependence/Figures/* for saving the figures of the detection results under Weak-dependence covariance structure then run ***Simulation_BiRS/Weak-dependence/Organize.R*** to generate them.
 
 #### Simulation for comparing detection performance of different methods under genetic settings
-1. Run plink2 in command line to get the 100 loci from UK Biobank imputed data, example code:
-```Bash
-plink --bfile /zhw/ukb/genotype/ukb_imp_merged_v5 --keep /zhw/projects/BiRS/brifile.100000.txt --extract /zhw/projects/BiRS/10000variant.id_british.txt --make-bed --out /zhw/projects/BiRS/ukb_british_100000sample_10000SNP
-```
-2. Run ***Simulation_BiRS/Genetic_Setting/get_correlation_100loci.R*** to get the Pearson correlation matrix for simulation.  
-3. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
-4. Run ***Simulation_BiRS/Genetic_Setting/Describe_Genetic.R*** for generating description information of the detection results under genetic setting.
-5. Create folder *Simulation_BiRS/Genetic_Setting/Figures/* for saving the figures of the detection results under genetic setting then run ***Simulation_BiRS/Genetic_Setting/Organize_Genetic.R*** to generate them.
+1. Using cosi2 and the parameter files ***Simulation_BiRS/Genetic_Setting/parama_ukb*** and ***Simulation_BiRS/Genetic_Setting/recParams_ukb*** to generate haplotypes.
+2. Create folder *Simulation_BiRS/Genetic_Setting/ukb_simu_txt/* and use the command line to separate the generated haplotype file into 1000 part and run ***Simulation_BiRS/Genetic_Setting/BinaryGenerator*** to get the binary files for sequence data (.bim, .bed, .fam), please create folder *Simulation_BiRS/Genetic_Setting/ukb_simu_binary/*.
+3. Using plink2 to merge the binary files in *Simulation_BiRS/Genetic_Setting/ukb_simu_binary/* into ***Simulation_BiRS/Genetic_Setting/genotype.bed (.fam, .bim)***.
+4. Run ***Simulation_BiRS/Genetic_Setting/get_corMat*** and ***Simulation_BiRS/Genetic_Setting/get_PDcorMat*** to get the LD matrix and MAF for generating data, please create folders *Simulation_BiRS/Genetic_Setting/corMatrix/*, *Simulation_BiRS/Genetic_Setting/corMatrixPD/* and *Simulation_BiRS/Genetic_Setting/MAFS/*.
+5. Run ***Simulation_BiRS/Genetic_Setting/Genetic_Setting.R*** to generate the detection results under genetic setting.
+6. Run ***Simulation_BiRS/Genetic_Setting/Describe_Genetic.R*** for generating description information of the detection results under genetic setting.
+7. Create folder *Simulation_BiRS/Genetic_Setting/Figures/* for saving the figures of the detection results under genetic setting then run ***Simulation_BiRS/Genetic_Setting/Organize_Genetic.R*** to generate them.
 
 #### Simulation for comparing the empirical FWERs of different methods for different settings.
-1. Run ***Simulation_BiRS/Size-Test/Size-Test.R*** to generate the empirical FWERs of different methods for different settings (saving as .RData file).
-2. Run ***Simulation_BiRS/Size-Test/Describe_Size.R*** for generating table of the empirical FWERs of different methods for different settings, which is the Table 1 in the main paper.
+1. Run ***Simulation_BiRS/Size-Test/Size-Test.R*** and ***Simulation_BiRS/Size-Test/Genetic_Size.R*** to generate the empirical FWERs of different methods for different settings (saving as .RData file).
+2. Run ***Simulation_BiRS/Size-Test/Describe_Size.R*** and ***Simulation_BiRS/Size-Test/Describe_Genetic_Size.R*** for generating tables of the empirical FWERs of different methods for different settings, which are the Table 1 and 2 in the main paper.
 
 #### Simulation for comparing the computational time for different methods.
 1. Run ***Simulation_BiRS/Speed-test.R*** to generate the computational time for different methods.
@@ -140,7 +139,30 @@ plink --bfile /zhw/ukb/genotype/ukb_imp_merged_v5 --keep /zhw/projects/BiRS/brif
 4. Run ***Application_Code/KnockoffScreen/KSGWAS.R*** to perform region-wise GWAS on the genomic data using KnockoffScreen and generate the GWAS results contained in *GWAS-KS.csv*.
 5. Run ***Application_Code/QSCAN/QScanGenome.R*** to perform region-wise GWAS on the genomic data using Q-SCAN and generate the GWAS results contained in *GWAS-Scan.csv*.
 6. Run ***Application_Code/BiRS/BiRSGenome.R*** to perform region-wise GWAS on the genomic data using BiRS-DCF and generate the GWAS results contained in *GWAS-BiRS.csv*.
+7. Run ***Application_Code/4S/4S_GWAS.R*** to perform region-wise GWAS on the genomic data using 4S and generate the GWAS results contained in *GWAS-4S.csv*.
 
-#### Data application: visualize the detected signal regions of different methods
-1. Please make sure that the .csv files *C50Breast_BiRS.csv*, *C50Breast_Scan*, *C50Breast_KSGWAS*, *C50Breast_Regenie*, *C50Breast_chr11_gene.csv*, *C50Breast_chr12_gene.csv*, *C50Breast_chr19_gene.csv* and Rscript ***plot_gene*** in the same directory.
+#### Data application: visualize the detected signal regions of GWAS of different methods
+1. Please make sure that the .csv files *C50Breast_BiRS.csv*, *C50Breast_Scan*, *C50Breast_KSGWAS*, *C50Breast_Regenie*, *C50Breast_4S*, *C50Breast_chr11_gene.csv*, *C50Breast_chr12_gene.csv*, *C50Breast_chr19_gene.csv* and Rscript ***plot_gene*** in the same directory.
 2. Run ***plot_gene*** to visualize the detected signal regions and related genes.
+
+#### Data application: perform WGS using BiRS-DCF
+1. Make sure you can access the 200k WGS data in ukbiobank and conduct analysis in RAP.
+2. Copy the .RData files *Binary_Sample_field40006_breast_cancer_covariate_phenotype.RData* and *KSID.RData* generated during GWAS to RAP.
+3. Run ***Application_Code/WGS/Get_WGS_Samples.R*** to get the samples after quality control.
+4. Run ***Application_Code/WGS/Generate_Block_Index.R*** to get the blocks for detection.
+5. Run ***Application_Code/WGS/BiRS_WGS_Chr1.R*** to get the WGS results in chromosome 1 (for chromosomes 2--22, change the parameter CHR).
+6. Run ***Application_Code/WGS/Summary_WGS.R*** to get the final results.
+
+
+#### Supplement Simulation: Simulation for comparing detection performance of SBB, WBB, BSB, SBS and WBS for all normal settings in Supplementary Material.
+1. Please create correct folders to store the simulation results.
+2. Run ***Supplementary_Code/BiRS-Cpts/MES-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/MNS-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/WES-BiRS-Cpts.R*** and ***Supplementary_Code/BiRS-Cpts/WNS-BiRS-Cpts.R*** to get the simulation results of SBB, WBB and BSB.
+3. Run ***Supplementary_Code/BiRS-Cpts/Summary.R***, ***Supplementary_Code/BiRS-Cpts/plot.R*** and ***Supplementary_Code/BiRS-Cpts/plotBSB.R*** to summarize and plot the simulation results.
+4. Run ***Supplementary_Code/Scan-Cpts/MES-Scan-Cpts.R***, ***Supplementary_Code/Scan-Cpts/MNS-Scan-Cpts.R***, ***Supplementary_Code/Scan-Cpts/WES-Scan-Cpts.R*** and ***Supplementary_Code/Scan-Cpts/WNS-Scan-Cpts.R*** to get the simulation results of SBS and WBS.
+5. Run ***Supplementary_Code/Scan-Cpts/Summary.R*** and ***Supplementary_Code/Scan-Cpts/plot.R*** to summarize and plot the simulation results.
+
+#### Supplement Simulation: Simulation for the sensitivity of truncation parameter s Supplementary Material.
+1. Please create correct folders to store the simulation results.
+2. Run ***Supplementary_Code/Sensitivity/MES-Sensitive.R***, ***Supplementary_Code/Sensitivity/MNS-Sensitive.R***, ***Supplementary_Code/Sensitivity/WES-Sensitive.R*** and ***Supplementary_Code/Sensitivity/WNS-Sensitive.R*** to get the simulation results of sensitivity.
+3. Run ***Supplementary_Code/Sensitivity/Summary.R*** to summarize and plot the simulation results.
+   
