@@ -11,7 +11,7 @@ library(matrixStats)
 p = 0
 for (block in 1:40)
 {
-  load(paste0('MAFS/block', block, '_maf.RData'))
+  load(paste0('~/Simulation_BiRS/Genetic_Setting/MAFS/block', block, '_maf.RData'))
   pb = length(MAF)
   
   p = p + pb
@@ -42,7 +42,7 @@ for (j in 1:7)
   set.seed(1)
   for (block in 1:40)
   {
-    load(paste0('MAFS/block', block, '_maf.RData'))
+    load(paste0('~/Simulation_BiRS/Genetic_Setting/MAFS/block', block, '_maf.RData'))
     pb = length(MAF)
     
     MAFC = MAF + 0.01
@@ -83,9 +83,9 @@ for (j in 1:7)
   MAFYMat[j, ] = MAFY
 }
 
-source('BlockBiRS.R')
-source('4S_Algorithm.R')
-load('part numbers.RData')
+source('~/Simulation_BiRS/Genetic_Setting/BlockBiRS.R')
+source('~/Simulation_BiRS/4S_Algorithm.R')
+load('~/Simulation_BiRS/Genetic_Setting/part numbers.RData')
 
 n = 6000; m = 4000; nsimu = 1000
 MB = 1000; alpha = 0.05
@@ -111,7 +111,7 @@ SimuL = function(s)
       
       for (part in 1:numb)
       {
-        load(paste0('corMatrixPD/block', b, '_part_', part, '_cor.RData'))
+        load(paste0('~/Simulation_BiRS/Genetic_Setting/corMatrixPD/block', b, '_part_', part, '_cor.RData'))
         pp = ncol(LD)
   
         p.et = p.st + pp - 1
