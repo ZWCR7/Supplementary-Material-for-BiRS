@@ -66,8 +66,7 @@ p = 8192; n = 600; m = 400; nsimu = 100
 MB = 1000; alpha = 0.05 
 
 
-truncv = log(16:64, base = 2)
-
+truncv = 3:6
 SimuL = function(i)
 {
   set.seed(i)
