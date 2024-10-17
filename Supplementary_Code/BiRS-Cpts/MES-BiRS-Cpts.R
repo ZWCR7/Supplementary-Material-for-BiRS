@@ -102,26 +102,14 @@ for (l in 1:length(mulist))
     reBSD = SigDetDCF(Xi, Yi, foldlen = 8192, trunc = 5, MB, alpha)
     bbBSD = Sys.time()
     DifTBSD = bbBSD - aaBSD
-
-    aaBSB = Sys.time()
-    reBSB = SeedDetDCF(Xi, Yi, foldlen = 8192, decay = 2, trunc = 5, MB, alpha)
-    bbBSB = Sys.time()
-    DifTBSB = bbBSB - aaBSB
-
+    
     aaWBB = Sys.time()
     reWBB = WildDetectBiRS(Xi, Yi, M = 500, m = 32, trunc = 5)
     bbWBB = Sys.time()
     DifTWBB = bbWBB - aaWBB
-    
-    aaSBB = Sys.time()
-    reSBB = SeedDetectBiRS(Xi, Yi, decay = 2, m = 64, trunc = 5)
-    bbSBB = Sys.time()
-    DifTSBB = bbSBB - aaSBB
-    
-     
     ############################################################################
     
-    return(list(reBSD = reBSD, DifTBSD = DifTBSD, reSBB = reSBB, DifTSBB = DifTSBB, reWBB = reWBB, DifTWBB = DifTWBB, reBSB = reBSB, diffBSB = diffBSB))
+    return(list(reBSD = reBSD, DifTBSD = DifTBSD, reWBB = reWBB, DifTWBB = DifTWBB))
   }
   
   cl = makeCluster(50)
