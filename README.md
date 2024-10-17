@@ -76,13 +76,8 @@ https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data 
 
 
 4. Directory *Supplementary_Code* contains the additional simulations in Supplementary Material. Specifically, 
-- The R script ***BiRS-Cpts/SummaryBiRS***, ***BiRS-Cpts/SeedBiRS***, ***BiRS-Cpts/WildBiRS*** and ***BiRS-Cpts/Seeded-BiRS-DCF*** contain the code for applying SBB, WBB and SBS.
+- The R script ***BiRS-Cpts/SummaryBiRS*** and ***BiRS-Cpts/WildBiRS*** contain the code for applying WBB.
 - The R script ***BiRS-Cpts/MES-BiRS-Cpts***,  ***BiRS-Cpts/MNS-BiRS-Cpts***,  ***BiRS-Cpts/WES-BiRS-Cpts*** and  ***BiRS-Cpts/MES-BiRS-Cpts*** contain the codes for generating data and conducting simulations for MES, MNS, WES and WNS setting.
-- The R scripts ***BiRS-Cpts/Summary*** contains the code for generating description information of the detection results under all settings.  
-- The R scripts ***BiRS-Cpts/plot*** and ***BiRS-Cpts/plot-BSB*** contain the code for generating figures of the detection results.
-
-- The R script ***Scan-Cpts/Wild_Detect*** and ***Scan-Cpts/Seed_Detect*** contain the code for applying WBS and SBS.
-- The R script ***Scan-Cpts/MES-Scan-Cpts***,  ***Scan-Cpts/MNS-Scan-Cpts***,  ***Scan-Cpts/WES-Scan-Cpts*** and  ***Scan-Cpts/MES-Scan-Cpts*** contain the codes for generating data and conducting simulations for MES, MNS, WES and WNS setting.
 - The R scripts ***BiRS-Cpts/Summary*** contains the code for generating description information of the detection results under all settings.  
 - The R scripts ***BiRS-Cpts/plot*** contains the code for generating figures of the detection results.
 
@@ -159,11 +154,9 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 
 #### Supplement Simulation: Simulation for comparing detection performance of SBB, WBB, BSB, SBS and WBS for all normal settings in Supplementary Material.
 1. Please create correct folders to store the simulation results.
-2. Run ***Supplementary_Code/BiRS-Cpts/MES-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/MNS-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/WES-BiRS-Cpts.R*** and ***Supplementary_Code/BiRS-Cpts/WNS-BiRS-Cpts.R*** to get the simulation results of SBB, WBB and BSB.
-3. Run ***Supplementary_Code/BiRS-Cpts/Summary.R***, ***Supplementary_Code/BiRS-Cpts/plot.R*** and ***Supplementary_Code/BiRS-Cpts/plotBSB.R*** to summarize and plot the simulation results.
-4. Run ***Supplementary_Code/Scan-Cpts/MES-Scan-Cpts.R***, ***Supplementary_Code/Scan-Cpts/MNS-Scan-Cpts.R***, ***Supplementary_Code/Scan-Cpts/WES-Scan-Cpts.R*** and ***Supplementary_Code/Scan-Cpts/WNS-Scan-Cpts.R*** to get the simulation results of SBS and WBS.
-5. Run ***Supplementary_Code/Scan-Cpts/Summary.R*** and ***Supplementary_Code/Scan-Cpts/plot.R*** to summarize and plot the simulation results.
-
+2. Run ***Supplementary_Code/BiRS-Cpts/MES-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/MNS-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/WES-BiRS-Cpts.R*** and ***Supplementary_Code/BiRS-Cpts/WNS-BiRS-Cpts.R*** to get the simulation results of WBB.
+3. Run ***Supplementary_Code/BiRS-Cpts/Summary.R*** and ***Supplementary_Code/BiRS-Cpts/plot.R*** to summarize and plot the simulation results.
+ 
 #### Supplement Simulation: Simulation for the sensitivity of truncation parameter s Supplementary Material.
 1. Please create correct folders to store the simulation results.
 2. Run ***Supplementary_Code/Sensitivity/MES-Sensitive.R***, ***Supplementary_Code/Sensitivity/MNS-Sensitive.R***, ***Supplementary_Code/Sensitivity/WES-Sensitive.R*** and ***Supplementary_Code/Sensitivity/WNS-Sensitive.R*** to get the simulation results of sensitivity.
