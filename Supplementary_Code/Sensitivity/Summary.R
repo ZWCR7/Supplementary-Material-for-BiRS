@@ -1,6 +1,6 @@
 rm(list = ls())
 
-truncv = 3：6
+truncv = 3:6
 snum = length(truncv)
 
 Trate = matrix(0, 100, snum)
@@ -43,7 +43,7 @@ for (i in 1:snum)
   
 }
 
-delta = 3：6
+delta = 3:6
 
 TPR = apply(Trate, 2, mean)
 FDR = apply(Frate, 2, mean)
