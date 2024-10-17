@@ -63,7 +63,6 @@ for (l in 1:length(mulist))
   print(paste0(' mulist', l, ' :start'))
   
   source('WildBiRS.R')
-  source('SeedBiRS.R')
   
   p = 8192; D = 64; n = 600; m = 400; nsimu = 100
   MB = 1000; alpha = 0.05 
