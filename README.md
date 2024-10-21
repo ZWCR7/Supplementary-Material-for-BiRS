@@ -152,7 +152,7 @@ Overall, please first install the *BiRS* package through *BiRS_0.1.0.tar.gz*.
 6. Run ***Application_Code/WGS/Summary_WGS.R*** to get the final results.
 
 
-#### Supplement Simulation: Simulation for comparing detection performance of SBB, WBB, BSB, SBS and WBS for all normal settings in Supplementary Material.
+#### Supplement Simulation: Simulation for comparing detection performance of WBB for all normal settings in Supplementary Material.
 1. Please create correct folders to store the simulation results.
 2. Run ***Supplementary_Code/BiRS-Cpts/MES-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/MNS-BiRS-Cpts.R***, ***Supplementary_Code/BiRS-Cpts/WES-BiRS-Cpts.R*** and ***Supplementary_Code/BiRS-Cpts/WNS-BiRS-Cpts.R*** to get the simulation results of WBB.
 3. Run ***Supplementary_Code/BiRS-Cpts/Summary.R*** and ***Supplementary_Code/BiRS-Cpts/plot.R*** to summarize and plot the simulation results.
