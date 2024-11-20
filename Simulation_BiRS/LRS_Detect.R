@@ -6,7 +6,7 @@ ScanM = function(X, Y, Lmin, Lmax, skip, MB = 1000, alpha = 0.05)
   Un = sqrt(n)*(apply(X, 2, mean) - apply(Y, 2, mean))
   EleVar = apply(X, 2, var) + apply(Y, 2, var)*(n/m)
   
-  Un = Un/EleVar
+  Un = Un/sqrt(EleVar)
   
   thresh = sqrt(2*log(p*Lmax))
   
