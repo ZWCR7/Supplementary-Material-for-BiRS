@@ -5,7 +5,7 @@ Supplementary codes and tables for BiRS
 - Previous data published in UK Biobank were used for this work and this research has been conducted using UK Biobank Resource under project 79237. One can refer to 
 https://biobank.ctsu.ox.ac.uk/crystal/index.cgi for accessing and enabling data download or detailed description of UKB data.
 - All WGS studies are conducted in the UK Biobank Research Analysis Platform (RAP), see https://ukbiobank.dnanexus.com/landing for details.
-- PLINK2.0 was used to pre-treatment UKB data, see https://www.cog-genomics.org/plink/2.0/ for detailed manuls of using PLINK2.0.
+- PLINK2.0 was used to pre-treat UKB data, see https://www.cog-genomics.org/plink/2.0/ for detailed manuls of using PLINK2.0.
 - cosi2 was used to generated simulation data, see https://github.com/broadinstitute/cosi2 for detaild manuls of using cosi2.
 
 ## GWAS and WGS results
